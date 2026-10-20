@@ -1,0 +1,9 @@
+{
+  "name": "speakwell",
+  "version": "1.0.0",
+  "description": "SpeakWell - AI speech coach (single-page app + Vercel functions)",
+  "private": true,
+  "license": "MIT",
+  "engines": { "node": ">=20" },
+  "scripts": { "test": "node tests/api.test.js" }
+}

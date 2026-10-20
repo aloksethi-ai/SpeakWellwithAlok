@@ -172,6 +172,46 @@ th{color:var(--navy)}
 @media print{.rpt-head{display:flex}.rpt-foot{display:block}.about,.top{display:none!important}body{background:#fff}}
 @media(max-width:700px){.about{grid-template-columns:1fr;gap:18px}.about .photo{width:130px;height:130px;border-radius:20px}.foot .wrap{grid-template-columns:1fr}.top{border-radius:0 0 22px 22px}}
 @media(max-width:560px){.nav .pill span{display:none}.nav .pill{padding:8px}}
+/* ---- Practice tab ---- */
+.modetabs{display:flex;gap:8px;margin:0 0 16px;padding:6px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow)}
+.modetabs button{flex:1;background:transparent;color:var(--mut);box-shadow:none;border-radius:12px;padding:12px 14px;font-weight:600}
+.modetabs button[aria-selected="true"]{background:linear-gradient(135deg,var(--pri),var(--pri2));color:#fff;box-shadow:0 4px 14px rgba(42,79,214,.28)}
+body.prac .freeonly{display:none}
+.pgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin-top:12px}
+.pcard{text-align:left;background:#f5f8ff;color:var(--ink);border:1.5px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:7px;box-shadow:none}
+.pcard:hover{border-color:var(--pri2)}
+.pcard[aria-pressed="true"]{border-color:var(--pri);background:#e6edff}
+.pcard b{font-family:var(--head);font-size:15px;line-height:1.3;font-weight:600}
+.pcard small{color:var(--mut);font-weight:500;font-size:12.5px}
+.pcat{align-self:flex-start;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:99px;background:#dbe5ff;color:var(--navy);display:inline-block}
+#pPreview{margin-top:18px;padding-top:14px;border-top:1px solid var(--line)}
+.pr-art{background:#fbfcff;border:1px solid var(--line);border-radius:14px;padding:16px 20px;margin:12px 0}
+.pr-art p{font-size:19px;line-height:1.8;margin:0 0 14px}
+.pr-art p:last-child{margin-bottom:0}
+.pr-art.live{max-height:44vh;overflow:auto;margin:6px 0 16px}
+.pr-livehead{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:4px}
+.pr-livehead b{font-family:var(--head);font-size:16px}
+.pr-fs{margin-left:auto;display:flex;gap:6px}
+.pr-fs button{padding:6px 12px}
+.pr-vocab{padding-left:18px;margin:6px 0}
+.pr-vocab li{margin:4px 0}
+.pr-bars{display:grid;gap:12px;margin:14px 0}
+.pr-bl{display:flex;justify-content:space-between;gap:10px;font-size:14px}
+.pr-bl span{color:var(--mut)}
+.pr-track{height:9px;border-radius:99px;background:#e5e7eb;overflow:hidden;margin:5px 0}
+.pr-track i{display:block;height:100%;border-radius:99px}
+.pr-track i.good{background:var(--ok)}.pr-track i.ok{background:#65a30d}.pr-track i.warn{background:var(--warn)}.pr-track i.bad{background:var(--bad)}
+.pr-read{background:#fbfcff;border:1px solid var(--line);border-radius:12px;padding:12px 16px}
+.pr-read p{margin:0 0 10px;line-height:1.8}
+.pr-legend{display:flex;flex-wrap:wrap;gap:8px;font-size:12.5px;margin:6px 0}
+.pr-legend span{padding:1px 8px;border-radius:6px}
+.rw-near{background:#fef3c7}
+.rw-sub{background:#fee2e2;color:#991b1b}
+.rw-miss{background:#fee2e2;color:#991b1b;text-decoration:underline dotted}
+.rw-un{color:#94a3b8}
+.pr-words{display:flex;flex-wrap:wrap;gap:8px;list-style:none;padding:0}
+.pr-words li{background:#f5f8ff;border:1px solid var(--line);border-radius:99px;padding:3px 12px}
+@media print{.modetabs,#practice,#liveRead{display:none!important}}
 </style>
 </head>
 <body>
@@ -239,11 +279,20 @@ th{color:var(--navy)}
   </ul>
 </section>
 
+<div class="modetabs" role="tablist" aria-label="Mode"><button type="button" id="tabFree" role="tab" aria-selected="true">Free speech</button><button type="button" id="tabPrac" role="tab" aria-selected="false">Practice reading</button></div>
+
+<section class="card hidden" id="practice" aria-labelledby="prTitle">
+  <h2 id="prTitle">Reading practice</h2>
+  <p class="muted">Choose one of ten topics. A short article appears with its recommended reading time. Read it aloud and get a score for accuracy, pace, fluency and voice, plus the words to practise and a vocabulary list.</p>
+  <div class="pgrid" id="pGrid"></div>
+  <div id="pPreview" class="hidden"></div>
+</section>
+
 <section class="card" id="setup">
   <h2>1. Set up your session</h2>
   <div class="grid3">
-    <div><label for="topic">Speech topic (optional)</label><input type="text" id="topic" maxlength="120" placeholder="e.g. Ice Breaker - My journey as a CA"></div>
-    <div><label for="stype">Timing (Toastmasters lights)</label>
+    <div class="freeonly"><label for="topic">Speech topic (optional)</label><input type="text" id="topic" maxlength="120" placeholder="e.g. Ice Breaker - My journey as a CA"></div>
+    <div class="freeonly"><label for="stype">Timing (Toastmasters lights)</label>
       <select id="stype">
         <option value="free">No timing</option>
         <option value="tt">Table Topics (1:00 / 1:30 / 2:00)</option>
@@ -266,6 +315,7 @@ th{color:var(--navy)}
 
 <section class="card hidden" id="live">
   <h2>2. Recording</h2>
+  <div id="liveRead" class="hidden"></div>
   <div class="live">
     <div>
       <div class="vwrap">
@@ -868,6 +918,7 @@ async function finish() {
   S.results = R; S.phase = 'done';
   $('live').classList.add('hidden'); $('results').classList.remove('hidden');
   renderResults(R);
+  if (typeof window.swPracticeAfter === 'function') window.swPracticeAfter(R);
   if (typeof window.swOnDone === 'function') window.swOnDone(R);
   say('Analysis complete. Scroll down for your report.', 'ok');
   $('results').scrollIntoView({ behavior: 'smooth' });
@@ -1053,6 +1104,322 @@ $('printR').onclick = () => { const d = $('rptDate'); if (d && S.results) d.text
 $('newS').onclick = () => { if (confirm('Start a new session? Unsaved recordings and the report will be lost.')) location.reload(); };
 window.addEventListener('beforeunload', e => { if (S.recording) { e.preventDefault(); e.returnValue = ''; } });
 </script>
+<script id="practice-script">
+var PRACTICE_ARTICLES = [
+{ id: 'learn', cat: 'Life', title: 'The Joy of Lifelong Learning',
+  p: [
+  "The most valuable habit a person can cultivate is curiosity. In a world where technologies emerge, mature, and become obsolete within a few short years, a diploma alone can no longer guarantee a lifetime of relevance. What endures is the ability to learn, unlearn, and relearn.",
+  "Lifelong learning does not demand that we return to a classroom. It asks only that we remain humble enough to admit what we do not know. A professional who reads for thirty minutes every day, who seeks feedback without defensiveness, and who treats every setback as a lesson, steadily accumulates an advantage that others struggle to match.",
+  "Consider how a gardener works. She does not expect a seed to flourish overnight; she waters it consistently, removes the weeds, and trusts the process. Knowledge behaves in precisely the same manner. Small, deliberate efforts compound into expertise.",
+  "Moreover, learning brings resilience. When circumstances change abruptly, as they inevitably do, the learner adapts while the complacent hesitate. So choose one skill this month, set aside a fixed hour each week, and begin. Progress, not perfection, is the goal. The journey itself will reshape how you think, how you work, and ultimately, who you become."
+  ],
+  vocab: [['cultivate', 'to develop a quality or skill with steady care'], ['obsolete', 'no longer useful or in use because something newer has replaced it'], ['humble', 'modest; not thinking you are better than others'], ['complacent', 'so satisfied with the present that you stop trying to improve'], ['resilience', 'the ability to recover quickly from difficulty']] },
+
+{ id: 'habits', cat: 'Life', title: 'Small Habits, Big Change',
+  p: [
+  "We often imagine that transformation requires a dramatic event: a bold resolution, a sudden epiphany, or a complete overhaul of our lives. In reality, lasting change is usually quiet and incremental. It is built from small habits repeated with remarkable consistency.",
+  "A habit works like a cycle. First there is a cue, then a routine, and finally a reward. When we understand this loop, we can redesign it deliberately. If you wish to exercise more, lay out your shoes the night before. If you wish to read more, keep a book on your pillow rather than your phone.",
+  "Critically, we should forgive ourselves when we falter. Missing a single day is a lapse; missing two becomes a pattern. Return promptly, without guilt, and continue. Over months and years, these tiny, disciplined choices accumulate into a life that looks, from the outside, almost effortless."
+  ],
+  vocab: [['epiphany', 'a sudden and striking realisation'], ['incremental', 'happening in small steps rather than all at once'], ['deliberately', 'in a careful, planned and intentional way'], ['falter', 'to lose strength or momentum; to hesitate'], ['lapse', 'a brief failure to maintain a standard or habit']] },
+
+{ id: 'ai', cat: 'Technology', title: 'Artificial Intelligence and the Future of Work',
+  p: [
+  "Artificial intelligence is no longer a distant concept confined to research laboratories. It drafts our emails, summarises lengthy documents, translates languages in an instant, and even assists doctors in interpreting medical images. Naturally, this rapid progress provokes a pressing question: will machines take our jobs?",
+  "History offers a nuanced answer. Every major technological wave, from the steam engine to the personal computer, eliminated certain tasks while creating entirely new occupations. The loom displaced hand weavers, yet it also gave rise to factories, designers, and global textile trade. Technology tends to automate tasks, not entire professions.",
+  "The tasks most susceptible to automation are repetitive, rule-based, and predictable. Data entry, routine reconciliation, and standard reporting fall into this category. Conversely, skills such as critical thinking, empathy, ethical judgement, and creative problem solving remain distinctly human. A machine can produce a draft in seconds, but it is a person who must verify its accuracy, understand its context, and bear accountability for its consequences.",
+  "Therefore, the wisest response is neither fear nor blind enthusiasm. Professionals should learn to collaborate with these tools, treating them as tireless assistants rather than rivals. Those who master the art of asking precise questions and evaluating answers critically will be remarkably productive.",
+  "Education will matter greatly. Institutions and employers must invest in reskilling, so that workers can move from declining tasks toward growing ones. Curiosity and adaptability, rather than any single technical skill, will become the most dependable career insurance in the years ahead.",
+  "Equally important is responsibility. Confidential information must never be carelessly shared with any system, and every output should be reviewed before it is trusted. The future will belong not to those who resist change, nor to those who surrender their judgement, but to those who combine human wisdom with machine efficiency."
+  ],
+  vocab: [['nuanced', 'showing small but important differences; not simply black or white'], ['susceptible', 'likely to be affected by something'], ['automate', 'to make a process run by machine with little human effort'], ['accountability', 'being answerable for your actions and their results'], ['conversely', 'in the opposite way; on the other hand']] },
+
+{ id: 'cyber', cat: 'Technology', title: 'Cybersecurity: Guarding Your Digital Life',
+  p: [
+  "Every time we log into a bank account, share a photograph, or click a link in an email, we make a quiet decision about our security. Cybercriminals understand this well, and they rarely attack the technology itself. Instead, they exploit human behaviour through a technique known as phishing.",
+  "A typical phishing message creates a sense of urgency. It warns that your account will be suspended, promises an unexpected refund, or imitates a trusted colleague. The objective is to hurry you into clicking before you think. The most effective defence is a deliberate pause. Examine the sender's address, hover over the link, and when in doubt, contact the organisation through its official channel.",
+  "Strong passwords form the second line of defence. A long, unique phrase for each account is far safer than a short, clever word reused everywhere. A password manager and two step verification add further layers of protection. Likewise, keeping software updated closes the vulnerabilities that attackers depend upon.",
+  "Finally, remember that no genuine bank will ever ask you to reveal a one time password over the telephone. Treat such requests with suspicion and end the call immediately. Security is not a product that we purchase once; it is a habit that we practise every day, with vigilance and good judgement."
+  ],
+  vocab: [['exploit', 'to take unfair advantage of a weakness'], ['phishing', 'tricking people into revealing private information by pretending to be a trusted source'], ['deliberate', 'done carefully and on purpose'], ['vulnerabilities', 'weaknesses that can be attacked or harmed'], ['vigilance', 'careful and continuous attention to possible danger']] },
+
+{ id: 'upi', cat: 'Technology & Economy', title: 'How Digital Payments Changed a Nation',
+  p: [
+  "Not long ago, paying for a cup of tea meant searching your pocket for loose change. Today, millions of people across India complete the same transaction in a few seconds by scanning a code with their smartphones. The Unified Payments Interface has transformed how a vast nation buys, sells, and saves.",
+  "The beauty of this system lies in its simplicity and interoperability. Different banks and applications can transfer money to one another instantly, around the clock, at remarkably low cost. A street vendor with a printed code now enjoys the same convenience as a large retailer.",
+  "The economic consequences are significant. Digital transactions leave a verifiable record, which improves transparency and makes it easier for small businesses to establish a credit history. Consequently, lenders can assess borrowers with greater confidence, and formal finance reaches people who were previously excluded.",
+  "Nevertheless, convenience carries responsibility. Users must guard their credentials, verify payment requests, and remain alert to fraud. Digital inclusion also requires patient education, so that no citizen is left behind. When technology, regulation, and awareness advance together, a payment system becomes more than a tool; it becomes a foundation for inclusive growth."
+  ],
+  vocab: [['interoperability', 'the ability of different systems to work together'], ['transparency', 'openness that lets others see how things are done'], ['verifiable', 'able to be checked and proved true'], ['credentials', 'details such as a password that prove who you are'], ['inclusive', 'including everyone, without leaving groups out']] },
+
+{ id: 'inflation', cat: 'Economy', title: 'Understanding Inflation',
+  p: [
+  "Inflation is the sustained rise in the general level of prices over time. When it occurs, each unit of currency purchases fewer goods and services than before. A basket of groceries that cost a certain amount last year may demand noticeably more today, even though the groceries themselves have not changed.",
+  "Economists identify several causes. Demand pull inflation arises when consumers wish to buy more than the economy can supply. Cost push inflation emerges when the price of inputs, such as fuel, raw materials, or wages, increases and producers pass those costs on to customers. Expectations also matter, because if people anticipate rising prices, they demand higher wages, which in turn pushes prices upward.",
+  "Central banks play a vital role in maintaining stability. By raising the policy interest rate, they make borrowing more expensive, which cools spending and eases pressure on prices. By lowering it, they encourage investment and growth. The challenge lies in balancing these objectives without causing a slowdown.",
+  "For households, inflation is a silent tax on idle savings. Money kept in a drawer steadily loses its purchasing power. Prudent individuals therefore seek investments whose returns exceed the rate of inflation over the long term, while maintaining adequate liquidity for emergencies.",
+  "Measurement is equally important. Statisticians track a representative basket of goods and services, assign each item a weight according to how much households spend on it, and compare the total cost across months. Because the basket reflects average behaviour, your personal experience of inflation may differ. A family that spends heavily on education or healthcare, for instance, may feel price pressures that the headline figure does not fully capture.",
+  "Understanding inflation, then, is not merely an academic exercise. It informs how we budget, how we save, and how we plan for a secure retirement."
+  ],
+  vocab: [['sustained', 'continuing for a long time without weakening'], ['anticipate', 'to expect something and prepare for it'], ['prudent', 'careful and sensible, especially with money'], ['liquidity', 'how easily an asset can be turned into cash'], ['purchasing power', 'the quantity of goods that a unit of money can buy']] },
+
+{ id: 'trade', cat: 'Economy', title: 'Global Trade and Supply Chains',
+  p: [
+  "Look closely at the smartphone in your hand, and you will find that it is a product of the entire world. Its design may originate in one country, its minerals in another, its components in a third, and its final assembly in a fourth. This intricate web is called a global supply chain, and it quietly sustains modern life.",
+  "The principle behind it is comparative advantage. Each nation focuses on what it produces most efficiently and trades for the rest. As a result, consumers enjoy greater variety at lower prices, and producers gain access to enormous markets.",
+  "However, interdependence also creates vulnerability. A pandemic, a conflict, or a blocked shipping lane can disrupt deliveries across continents within days. Recent years have taught businesses a sobering lesson: efficiency without resilience is fragile.",
+  "Consequently, many firms are diversifying their suppliers, holding larger inventories, and moving production closer to their customers. Governments, too, are encouraging domestic manufacturing in strategic sectors.",
+  "The goal is not to abandon trade but to make it more robust. For professionals in finance and management, understanding these dynamics is essential, because currency movements, tariffs, and logistics costs all influence profitability. A resilient enterprise is one that prepares for disruption before it arrives."
+  ],
+  vocab: [['intricate', 'having many small, connected parts; complicated'], ['comparative advantage', 'the ability to produce something at a lower opportunity cost than others'], ['interdependence', 'a state in which parties rely on one another'], ['sobering', 'making you think seriously'], ['robust', 'strong and able to withstand shocks']] },
+
+{ id: 'compound', cat: 'Finance', title: 'The Quiet Power of Compounding',
+  p: [
+  "Compounding is the process by which your earnings begin to generate earnings of their own. In the first year, interest is calculated only on your original investment. In the second year, it is calculated on the original amount plus the interest already earned. Over time, this snowball effect becomes extraordinary.",
+  "Imagine two friends. The first begins investing modest amounts at the age of twenty five and stops after ten years. The second waits until thirty five, then invests the same amount every year until retirement. Remarkably, the early starter often accumulates a larger sum, despite contributing for far fewer years. The explanation is simple: time is the most potent ingredient in the recipe.",
+  "Therefore, the best moment to begin is today, and the best habit is consistency. A disciplined monthly investment, however small, outperforms sporadic enthusiasm. Equally, patience is essential. Withdrawing prematurely, or panicking during a market decline, interrupts the very process that creates wealth.",
+  "Compounding also works in reverse. Debt carrying a high interest rate grows relentlessly against the borrower, so credit card balances deserve urgent attention.",
+  "Finally, remember that costs matter. High fees quietly erode returns year after year. Invest regularly, stay diversified, keep expenses low, and allow time to perform its quiet magic. Please note that this is general education, not personal financial advice."
+  ],
+  vocab: [['compound', 'to increase by adding growth on top of earlier growth'], ['potent', 'powerful; having a strong effect'], ['sporadic', 'happening only now and then, without a regular pattern'], ['relentlessly', 'without stopping or weakening'], ['erode', 'to wear away gradually']] },
+
+{ id: 'diversify', cat: 'Finance', title: 'Diversification: Balancing Risk and Reward',
+  p: [
+  "There is an old proverb that advises us not to place all our eggs in a single basket. In finance, this wisdom is known as diversification, and it remains one of the most reliable principles of prudent investing.",
+  "Every investment carries risk. A single company may stumble because of poor management, a regulatory change, or a shift in consumer taste. A single sector may suffer during an economic downturn. However, when your money is spread across different asset classes, such as equities, bonds, gold, and real estate, a loss in one area is often cushioned by stability or gains in another.",
+  "Diversification does not eliminate risk, nor does it guarantee profit. Its purpose is to reduce volatility, so that a single misfortune cannot derail your long term goals. It also protects us from our own emotions, because a balanced portfolio makes it easier to remain calm when markets fluctuate.",
+  "Equally important is aligning your portfolio with your time horizon and tolerance for risk. A young professional may reasonably hold more equities, whereas someone approaching retirement may prefer greater stability. Review your allocation periodically and rebalance when it drifts. Consult a qualified, registered adviser for guidance tailored to your circumstances."
+  ],
+  vocab: [['proverb', 'a short, well known saying that gives advice'], ['cushioned', 'softened or protected against a harsh impact'], ['volatility', 'how sharply and quickly a price moves up and down'], ['derail', 'to cause a plan or process to go off course'], ['tailored', 'made to suit a particular person or need']] },
+
+{ id: 'listen', cat: 'Leadership', title: 'The Art of Listening',
+  p: [
+  "Most of us believe that great communicators are those who speak eloquently. Yet the finest leaders often distinguish themselves by something quieter: the discipline of listening.",
+  "Genuine listening is more than waiting for our turn to talk. It requires full attention, a willingness to suspend judgement, and the curiosity to understand perspectives that differ from our own. When people feel heard, they become more candid, more creative, and more committed.",
+  "Several practices can sharpen this skill. Put away your phone, maintain gentle eye contact, and resist the urge to interrupt. Ask open ended questions that begin with what or how, for example, what concerns you most about this plan. Then paraphrase what you have heard to confirm your understanding. Pay attention, too, to tone, posture, and silence, because these often convey what words cannot.",
+  "Listening is particularly valuable in difficult conversations. It defuses tension, uncovers the real issue beneath the surface, and builds trust that no speech can manufacture.",
+  "The next time you attend a meeting, try an experiment. Listen twice as much as you speak. You may discover that your influence grows precisely when your talking diminishes."
+  ],
+  vocab: [['eloquently', 'in a fluent, persuasive and expressive way'], ['candid', 'honest and direct'], ['paraphrase', 'to restate something in different words'], ['convey', 'to communicate or express an idea or feeling'], ['defuse', 'to reduce tension or danger in a situation']] }
+];
+
+/* ---------- Reading practice: topics, article, scoring ---------- */
+(function () {
+  'use strict';
+  var ARTS = window.PRACTICE_ARTICLES || [], cur = null, mode = 'free';
+  var NUMW = ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine', 'ten', 'eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen', 'twenty'];
+  var TENS = ['', '', 'twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+  var REC_WPM = 130; // comfortable reading-aloud pace used to recommend a reading time
+
+  function norm(s) {
+    s = String(s).toLowerCase().replace(/[‘’]/g, "'").replace(/'/g, '').replace(/%/g, ' percent ');
+    s = s.replace(/\d+/g, function (m) {
+      var n = +m;
+      if (n <= 20) return ' ' + NUMW[n] + ' ';
+      if (n < 100) return ' ' + TENS[Math.floor(n / 10)] + ' ' + (n % 10 ? NUMW[n % 10] : '') + ' ';
+      return ' ' + m + ' ';
+    });
+    return s.split(/[^a-z]+/).filter(Boolean);
+  }
+  function artWords(a) { var out = []; a.p.forEach(function (p, pi) { p.split(/\s+/).filter(Boolean).forEach(function (w) { out.push({ w: w, p: pi }); }); }); return out; }
+  function wordCount(a) { return norm(a.p.join(' ')).length; }
+  function recMinutes(a) { return Math.min(3, Math.max(1, Math.round(wordCount(a) / REC_WPM * 2) / 2)); }
+  function minLabel(m) { var w = Math.floor(m), h = m - w === 0.5; return (w ? w : '') + (h ? '½' : '') + (m === 1 ? ' minute' : ' minutes'); }
+
+  function lev(a, b) {
+    if (a === b) return 0;
+    var la = a.length, lb = b.length; if (Math.abs(la - lb) > 2) return 3;
+    var prev = [], cur2, i, j;
+    for (j = 0; j <= lb; j++) prev[j] = j;
+    for (i = 1; i <= la; i++) {
+      cur2 = [i];
+      for (j = 1; j <= lb; j++) cur2[j] = Math.min(prev[j] + 1, cur2[j - 1] + 1, prev[j - 1] + (a.charAt(i - 1) === b.charAt(j - 1) ? 0 : 1));
+      prev = cur2;
+    }
+    return prev[lb];
+  }
+  function cost(a, b) {
+    if (a === b) return 0;
+    var d = lev(a, b);
+    if ((a.length >= 4 && d <= 1) || (a.length >= 8 && d <= 2)) return 0.35;
+    return 1;
+  }
+
+  // Word-level alignment of the article (A) with what the recogniser heard (B).
+  function align(A, B) {
+    var n = A.length, m = B.length, W = m + 1, D = new Float32Array((n + 1) * W), T = new Uint8Array((n + 1) * W), i, j;
+    for (i = 1; i <= n; i++) { D[i * W] = i; T[i * W] = 3; }
+    for (j = 1; j <= m; j++) { D[j] = j; T[j] = 4; }
+    for (i = 1; i <= n; i++) for (j = 1; j <= m; j++) {
+      var c = cost(A[i - 1], B[j - 1]), best = D[(i - 1) * W + j - 1] + c, t = c === 0 ? 0 : c < 1 ? 1 : 2;
+      var up = D[(i - 1) * W + j] + 1, left = D[i * W + j - 1] + 1;
+      if (up < best) { best = up; t = 3; }
+      if (left < best) { best = left; t = 4; }
+      D[i * W + j] = best; T[i * W + j] = t;
+    }
+    var lab = new Array(n), heard = new Array(n), extras = 0; i = n; j = m;
+    while (i > 0 || j > 0) {
+      var t2 = T[i * W + j];
+      if (i > 0 && j > 0 && t2 <= 2) { lab[i - 1] = ['ok', 'near', 'sub'][t2]; heard[i - 1] = B[j - 1]; i--; j--; }
+      else if (i > 0 && (j === 0 || t2 === 3)) { lab[i - 1] = 'miss'; i--; }
+      else { extras++; j--; }
+    }
+    return { lab: lab, heard: heard, extras: extras };
+  }
+
+  function scoreReading(art, R) {
+    var disp = artWords(art), A = [], owner = [];
+    disp.forEach(function (d, k) { norm(d.w).forEach(function (t) { A.push(t); owner.push(k); }); });
+    var B = norm(R.segments.map(function (s) { return s.text; }).join(' '));
+    var al = align(A, B), N = A.length, cnt = { ok: 0, near: 0, sub: 0, miss: 0 };
+    al.lab.forEach(function (l) { cnt[l]++; });
+    var tail = N; while (tail > 0 && al.lab[tail - 1] === 'miss') tail--;
+    var accuracy = Math.max(0, Math.min(100, (cnt.ok + 0.75 * cnt.near) / N * 100 - Math.min(8, al.extras / N * 50)));
+    var wpm = R.wpmSpeaking, paceScore = wpm < 110 ? 100 - (110 - wpm) * 2 : wpm > 150 ? 100 - (wpm - 150) * 2 : 100;
+    paceScore = Math.round(clamp(paceScore, 0, 100));
+    var sentences = (art.p.join(' ').match(/[.!?]/g) || []).length, hes = R.T.fillers.byCat.hes || 0;
+    var allowed = sentences * 1.2 + 4, pen = 8 * R.lng.length + 2 * Math.max(0, R.eff.length - allowed) + 5 * hes + 3 * R.T.repeats;
+    var fluency = Math.round(clamp(100 - pen, 0, 100));
+    var vocal = null; (R.cats || []).forEach(function (c) { if (c.key === 'vocal') vocal = c.score; });
+    var parts = [[accuracy, 50], [paceScore, 20], [fluency, 20]]; if (vocal != null) parts.push([vocal, 10]);
+    var ws = 0, tw = 0; parts.forEach(function (p) { ws += p[0] * p[1]; tw += p[1]; });
+    var total = Math.min(Math.round(ws / tw), Math.round(accuracy) + 20); // a score cannot be high if the words were not read
+    return { N: N, cnt: cnt, extras: al.extras, tail: tail, lab: al.lab, heard: al.heard, owner: owner, disp: disp,
+      accuracy: Math.round(accuracy), paceScore: paceScore, fluency: fluency, vocal: vocal, total: total, wpm: wpm,
+      readSecs: R.speakTime + R.pauseTotal, covered: Math.round(tail / N * 100), longPauses: R.lng.length, hes: hes };
+  }
+
+  function bar(label, score, note) {
+    var b = band(score);
+    return '<div class="pr-bar"><div class="pr-bl"><b>' + esc(label) + '</b><span>' + score + '/100 &middot; ' + esc(b[0]) + '</span></div><div class="pr-track"><i class="' + b[1] + '" style="width:' + score + '%"></i></div><div class="muted">' + note + '</div></div>';
+  }
+
+  function resultHtml(art, res, R) {
+    var o = res.total, ob = band(o), ringC = { good: 'var(--ok)', ok: '#65a30d', warn: 'var(--warn)', bad: 'var(--bad)' }[ob[1]];
+    var rec = recMinutes(art), h = '<div class="card pr-card"><h2>Reading practice result</h2><p class="muted">' + esc(art.title) + ' &middot; ' + esc(art.cat) + '</p>';
+    h += '<div class="ringbox"><div class="ring" style="--p:' + o + ';--c:' + ringC + '"><span>' + o + '</span></div><div><div style="font-size:20px;font-weight:700">' + esc(ob[0]) + '</div><div class="muted">Reading score out of 100: accuracy 50%, pace 20%, fluency 20%' + (res.vocal != null ? ', voice variety 10%' : '') + '.</div></div></div>';
+    h += '<div class="pr-bars">';
+    h += bar('Accuracy', res.accuracy, res.cnt.ok + res.cnt.near + ' of ' + res.N + ' words matched the article' + (res.cnt.near ? ' (' + res.cnt.near + (res.cnt.near === 1 ? ' close match)' : ' close matches)') : '') + '; ' + res.cnt.sub + ' misread; ' + Math.max(0, res.cnt.miss - (res.N - res.tail)) + ' skipped; ' + res.extras + ' extra words heard.');
+    var paceNote = res.wpm < 100 ? 'Slower than ideal. Aim for a steady 110 to 150 words per minute.' : res.wpm < 110 ? 'Slightly slow; a little more flow will help.' : res.wpm <= 150 ? 'In the ideal range for reading aloud.' : res.wpm <= 170 ? 'A little fast; slow down so listeners can absorb each idea.' : 'Too fast; breathe at full stops and slow down.';
+    h += bar('Pace', res.paceScore, Math.round(res.wpm) + ' words per minute while speaking. ' + paceNote);
+    h += bar('Fluency', res.fluency, res.longPauses + ' long pause' + (res.longPauses === 1 ? '' : 's') + ' (2.5 s or more), ' + res.hes + ' hesitation sound' + (res.hes === 1 ? '' : 's') + ', ' + R.T.repeats + ' repeated word' + (R.T.repeats === 1 ? '' : 's') + '.');
+    if (res.vocal != null) h += bar('Voice variety', Math.round(res.vocal), 'Pitch and volume variation; good readers lift key words and lower the voice at the end of a sentence.');
+    h += '</div>';
+    var diff = res.readSecs - rec * 60, tcmp = Math.abs(diff) <= 20 ? 'right on the recommended time' : diff > 0 ? fmtTime(diff) + ' longer than recommended' : fmtTime(-diff) + ' shorter than recommended';
+    h += '<div class="stats">' +
+      '<div class="stat"><span>Recommended time</span><b>' + esc(minLabel(rec)) + '</b></div>' +
+      '<div class="stat"><span>Your reading time</span><b>' + fmtTime(res.readSecs) + '</b></div>' +
+      '<div class="stat"><span>Article covered</span><b>' + res.covered + '%</b></div>' +
+      '<div class="stat"><span>Words in article</span><b>' + res.N + '</b></div></div>';
+    h += '<p class="muted">You took ' + esc(tcmp) + (res.covered < 90 ? ', but you covered only ' + res.covered + '% of the article, so try to finish it next time.' : '.') + '</p>';
+
+    // word-by-word view
+    var wst = res.disp.map(function () { return 'ok'; }), wheard = res.disp.map(function () { return ''; }), rank = { ok: 0, near: 1, miss: 2, sub: 3 }, k;
+    for (k = 0; k < res.owner.length; k++) { var o2 = res.owner[k], l = res.lab[k]; if (rank[l] > rank[wst[o2]]) wst[o2] = l; if (res.heard[k]) wheard[o2] = res.heard[k]; }
+    var firstTailTok = res.tail, tailWord = res.tail < res.N ? res.owner[res.tail] : res.disp.length;
+    var pi = -1, body = '', cls, ttl;
+    res.disp.forEach(function (d, i) {
+      if (d.p !== pi) { if (pi >= 0) body += '</p>'; body += '<p>'; pi = d.p; }
+      cls = i >= tailWord ? 'rw-un' : { ok: '', near: 'rw-near', sub: 'rw-sub', miss: 'rw-miss' }[wst[i]];
+      ttl = i >= tailWord ? 'Not reached' : wst[i] === 'near' ? 'Heard: ' + wheard[i] : wst[i] === 'sub' ? 'Heard: ' + wheard[i] : wst[i] === 'miss' ? 'Not heard' : '';
+      body += (cls ? '<span class="' + cls + '" title="' + esc(ttl) + '">' + esc(d.w) + '</span>' : esc(d.w)) + ' ';
+    });
+    body += '</p>';
+    h += '<h3>Your reading, word by word</h3><div class="pr-legend"><span class="rw-near">close match</span><span class="rw-sub">misread</span><span class="rw-miss">skipped</span><span class="rw-un">not reached</span></div><div class="pr-read">' + body + '</div>';
+
+    // words to practise
+    var seen = {}, list = [];
+    res.disp.forEach(function (d, i) { if (i >= tailWord) return; if (wst[i] === 'sub' || wst[i] === 'miss' || wst[i] === 'near') { var w = d.w.replace(/[^A-Za-z'-]/g, ''); if (w.length > 2 && !seen[w.toLowerCase()]) { seen[w.toLowerCase()] = 1; list.push({ w: w, st: wst[i], hd: wheard[i] }); } } });
+    if (list.length) {
+      h += '<h3>Words to practise</h3><ul class="pr-words">' + list.slice(0, 16).map(function (x) { return '<li><b>' + esc(x.w) + '</b> <span class="muted">' + (x.st === 'miss' ? 'skipped' : 'heard as &ldquo;' + esc(x.hd) + '&rdquo;') + '</span></li>'; }).join('') + '</ul>';
+    }
+
+    // personalised tips
+    var tips = [];
+    if (res.covered < 90) tips.push('You stopped near ' + res.covered + '% of the article. Read the whole text next time; glance ahead one phrase at a time so you do not stall.');
+    if (res.accuracy < 80) tips.push('Read slightly slower and say every word clearly, especially the longer words listed above. Practise them aloud three times each before the next attempt.');
+    if (res.wpm > 150) tips.push('Your pace was fast. Pause briefly at every full stop and breathe; the pause is part of good delivery.');
+    if (res.wpm < 110) tips.push('Your pace was slow. Try reading in phrases of four to six words rather than word by word.');
+    if (res.longPauses > 2) tips.push('Several long pauses suggest you lost your place. Run a finger or the cursor down the page, or read the article silently once first.');
+    if (res.hes > 2) tips.push('Replace "um" and "er" with a silent pause; silence sounds confident.');
+    if (res.vocal != null && res.vocal < 60) tips.push('Add vocal colour: stress the key word in each sentence and let your voice fall at the end of a statement.');
+    if (!tips.length) tips.push('Excellent reading. Try a different topic, or read the same article again aiming for even more expression.');
+    h += '<h3>How to improve</h3><ul>' + tips.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') + '</ul>';
+    h += '<h3>Vocabulary from this article</h3><ul class="pr-vocab">' + art.vocab.map(function (v) { return '<li><b>' + esc(v[0]) + '</b> &mdash; ' + esc(v[1]) + '</li>'; }).join('') + '</ul>';
+    h += '<p class="muted">How this is scored: your voice is converted to text by the browser\'s speech recognition and compared word by word with the article. A word flagged as misread can mean unclear pronunciation or a recognition error, so use the list as a guide rather than a verdict. Indicative practice feedback only.</p></div>';
+    return h;
+  }
+
+  function noScoreHtml(art) {
+    return '<div class="card pr-card"><h2>Reading practice result</h2><p class="muted">' + esc(art.title) + '</p><p>No reading score could be calculated because very little speech was transcribed. Please use Chrome or Edge with an internet connection, allow the microphone, speak clearly close to the microphone, and try again. Delivery analysis (pitch, pauses, expression) is shown below where available.</p></div>';
+  }
+
+  window.swPracticeAfter = function (R) {
+    if (mode !== 'practice' || !cur) return;
+    try {
+      var rep = $('report'), html;
+      R.practiceTitle = cur.title;
+      if (R.hasText && R.segments && R.segments.length) { var res = scoreReading(cur, R); R.readScore = res.total; html = resultHtml(cur, res, R); }
+      else html = noScoreHtml(cur);
+      rep.insertAdjacentHTML('afterbegin', html);
+      var h2s = rep.querySelectorAll('.card:not(.pr-card) > h2'); if (h2s[0]) h2s[0].textContent = 'Delivery analysis (voice, pauses and expression)';
+    } catch (e) { console.warn('practice scoring failed', e); }
+  };
+
+  /* ---------- UI ---------- */
+  function articleHtml(a, big) {
+    return a.p.map(function (p) { return '<p>' + esc(p) + '</p>'; }).join('');
+  }
+  function renderGrid() {
+    $('pGrid').innerHTML = ARTS.map(function (a, i) {
+      return '<button type="button" class="pcard" data-i="' + i + '" aria-pressed="false"><span class="pcat">' + esc(a.cat) + '</span><b>' + esc(a.title) + '</b><small>About ' + esc(minLabel(recMinutes(a))) + ' &middot; ' + wordCount(a) + ' words</small></button>';
+    }).join('');
+    Array.prototype.forEach.call($('pGrid').children, function (b) { b.onclick = function () { choose(+b.getAttribute('data-i')); }; });
+  }
+  function choose(i) {
+    if (S.recording) return;
+    cur = ARTS[i];
+    Array.prototype.forEach.call($('pGrid').children, function (b) { b.setAttribute('aria-pressed', String(+b.getAttribute('data-i') === i)); });
+    var m = recMinutes(cur);
+    $('pPreview').classList.remove('hidden');
+    $('pPreview').innerHTML = '<div class="pr-meta"><span class="pcat">' + esc(cur.cat) + '</span><h3 style="margin:6px 0 4px">' + esc(cur.title) + '</h3>' +
+      '<div class="chips"><span class="chip y">Recommended reading time: ' + esc(minLabel(m)) + '</span><span class="chip">' + wordCount(cur) + ' words</span><span class="chip">Aim for 110 to 150 words per minute</span></div></div>' +
+      '<div class="pr-art">' + articleHtml(cur) + '</div>' +
+      '<h3>Words to learn</h3><ul class="pr-vocab">' + cur.vocab.map(function (v) { return '<li><b>' + esc(v[0]) + '</b> &mdash; ' + esc(v[1]) + '</li>'; }).join('') + '</ul>' +
+      '<p class="muted">Read the article silently once, then press Start. Read it aloud clearly, at a steady pace, pausing briefly at full stops. Do not add comments; stop when you finish.</p>' +
+      '<div class="row"><button type="button" id="pStart">Start reading aloud</button></div>';
+    $('pStart').onclick = function () { $('startBtn').click(); };
+    $('pPreview').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+  function setMode(m) {
+    if (S.recording || S.phase === 'processing') return;
+    mode = m; document.body.classList.toggle('prac', m === 'practice');
+    $('tabFree').setAttribute('aria-selected', String(m === 'free')); $('tabPrac').setAttribute('aria-selected', String(m === 'practice'));
+    $('practice').classList.toggle('hidden', m !== 'practice');
+    $('startBtn').textContent = m === 'practice' ? 'Start reading aloud' : 'Start recording';
+    if (m === 'practice') { $('stype').value = 'free'; }
+  }
+  function showLiveRead() {
+    var box = $('liveRead');
+    if (mode !== 'practice' || !cur) { box.classList.add('hidden'); box.innerHTML = ''; return; }
+    box.classList.remove('hidden');
+    box.innerHTML = '<div class="pr-livehead"><b>' + esc(cur.title) + '</b><span class="chip y">Recommended: ' + esc(minLabel(recMinutes(cur))) + '</span><span class="pr-fs"><button type="button" class="sec" id="fsDn" aria-label="Smaller text">A&minus;</button><button type="button" class="sec" id="fsUp" aria-label="Larger text">A+</button></span></div><div class="pr-art live" id="liveArt">' + articleHtml(cur) + '</div>';
+    var size = 19; $('fsDn').onclick = function () { size = Math.max(14, size - 2); $('liveArt').style.fontSize = size + 'px'; }; $('fsUp').onclick = function () { size = Math.min(34, size + 2); $('liveArt').style.fontSize = size + 'px'; };
+  }
+
+  renderGrid();
+  $('tabFree').onclick = function () { setMode('free'); };
+  $('tabPrac').onclick = function () { setMode('practice'); };
+  $('startBtn').onclick = async function () {
+    if (mode === 'practice') {
+      if (!cur) { say('Please choose a topic first, then press Start.', 'warn'); $('practice').scrollIntoView({ behavior: 'smooth' }); return; }
+      $('topic').value = 'Reading practice: ' + cur.title; $('stype').value = 'free'; showLiveRead();
+    } else showLiveRead();
+    await begin();
+    if (S.recording) $('live').scrollIntoView({ behavior: 'smooth' });
+  };
+})();
+</script>
 <script id="gate-script">
 (function () {
   'use strict';
@@ -1104,7 +1471,7 @@ window.addEventListener('beforeunload', e => { if (S.recording) { e.preventDefau
     var r = load(); if (!CFG.requireRegistration || !r || !r.id) return;
     try {
       fetch(CFG.apiBase + '/api/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
-        body: JSON.stringify({ id: r.id, duration: Math.round(R.dur), score: R.overall, hasVideo: !!S.hasVideo }) }).catch(function () { });
+        body: JSON.stringify({ id: r.id, duration: Math.round(R.dur), score: (R.readScore != null ? R.readScore : R.overall), hasVideo: !!S.hasVideo }) }).catch(function () { });
     } catch (e) { /* ignore */ }
   };
 })();

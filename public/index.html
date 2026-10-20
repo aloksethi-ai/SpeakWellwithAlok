@@ -1,1 +1,1113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SpeakWell - AI Speech Coach | Excel Vibez</title>
+<meta name="description" content="SpeakWell by Excel Vibez: record yourself on camera and get a free Toastmasters-style evaluation of language, vocal delivery and body language. Created by CA Alok Sethi.">
+<meta name="theme-color" content="#0b1f5c">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="SpeakWell by Excel Vibez">
+<meta property="og:title" content="SpeakWell - AI Speech Coach by Excel Vibez">
+<meta property="og:description" content="Free AI speech coach with Toastmasters-style evaluation. Created by CA Alok Sethi.">
+<meta property="og:image" content="https://speakwellwithalok.vercel.app/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/poppins-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
+<style id="appStyle">
+:root{--bg:#f3f5f9;--card:#fff;--ink:#0f1b2d;--mut:#5b6b82;--pri:#2a4fd6;--pri2:#5b8def;--ok:#16a34a;--warn:#d97706;--bad:#dc2626;--line:#e3e8f0}
+*{box-sizing:border-box}
+body{margin:0;font:15px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1100px;margin:0 auto;padding:0 16px}
+.top{background:linear-gradient(120deg,#0b3a66,#0e7c86);color:#fff;padding:22px 0;margin-bottom:18px}
+.top h1{margin:0;font-size:26px}.top h1 small{font-weight:400;opacity:.85;font-size:16px;margin-left:8px}
+.top p{margin:6px 0 0;opacity:.92}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px 20px;margin-bottom:16px;box-shadow:0 1px 2px rgba(15,27,45,.04)}
+.card h2{margin:0 0 10px;font-size:18px}
+.card h3{margin:16px 0 6px;font-size:16px;color:var(--pri)}
+.notice{border-left:5px solid var(--warn);background:#fffaf0}
+.notice ul{margin:6px 0 0;padding-left:20px}
+.hidden{display:none!important}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:800px){.grid2,.grid3{grid-template-columns:1fr}}
+label{display:block;font-weight:600;font-size:13px;margin:0 0 4px;color:var(--mut)}
+input[type=text],select{width:100%;padding:9px 10px;border:1px solid #cbd5e1;border-radius:8px;font:inherit;background:#fff}
+button{font:inherit;cursor:pointer;border:0;border-radius:8px;padding:10px 16px;font-weight:600;background:var(--pri);color:#fff}
+button:hover{filter:brightness(1.1)}button:disabled{opacity:.5;cursor:not-allowed}
+button.sec{background:#e6edff;color:var(--pri)}button.red{background:var(--bad)}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{font-size:12.5px;padding:3px 10px;border-radius:99px;background:#e6edff}
+.chip.y{background:#dcfce7;color:#166534}.chip.n{background:#fee2e2;color:#991b1b}
+#msg{margin-top:10px;padding:8px 12px;border-radius:8px;background:#eef2ff;display:none}
+#msg.show{display:block}#msg.ok{background:#dcfce7}#msg.warn{background:#fef3c7}#msg.bad{background:#fee2e2}
+.live{display:grid;grid-template-columns:1.35fr 1fr;gap:16px}
+@media(max-width:800px){.live{grid-template-columns:1fr}}
+.vwrap{position:relative;background:#000;border-radius:10px;overflow:hidden;aspect-ratio:16/9}
+.vwrap video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.badge{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.6);color:#fff;padding:4px 10px;border-radius:99px;font-weight:700;display:flex;gap:8px;align-items:center}
+.dot{width:10px;height:10px;border-radius:50%;background:#9ca3af;display:inline-block}
+.dot.rec{background:#ef4444;animation:bl 1s infinite}@keyframes bl{50%{opacity:.25}}
+.light{position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;background:#374151;border:2px solid #fff}
+.light.g{background:#22c55e}.light.a{background:#f59e0b}.light.r{background:#ef4444}
+.big{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:80px;color:#fff;font-weight:800;background:rgba(0,0,0,.45)}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.m{background:#f4f7ff;border:1px solid var(--line);border-radius:10px;padding:10px}
+.m span{display:block;font-size:12px;color:var(--mut)}.m b{font-size:20px}
+.meter{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin-top:6px}.meter i{display:block;height:100%;width:0;background:var(--pri2)}
+#caption{margin-top:10px;min-height:54px;padding:10px;background:#f4f7ff;border-radius:10px;border:1px dashed #cbd5e1;color:#334155}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:10px 0}
+.stat{background:#f4f7ff;border:1px solid var(--line);border-radius:10px;padding:10px}.stat span{display:block;font-size:12px;color:var(--mut)}.stat b{font-size:20px}
+.ringbox{display:flex;gap:22px;align-items:center;flex-wrap:wrap}
+.ring{--p:0;--c:var(--pri);width:132px;height:132px;border-radius:50%;background:conic-gradient(var(--c) calc(var(--p)*1%),#e5e7eb 0);display:flex;align-items:center;justify-content:center;position:relative}
+.ring::before{content:"";position:absolute;inset:12px;background:#fff;border-radius:50%}
+.ring span{position:relative;font-size:34px;font-weight:800}
+.bar{margin:10px 0}.bl{display:flex;justify-content:space-between;font-size:14px}.bl span{color:var(--mut)}
+.bt{height:10px;background:#e5e7eb;border-radius:99px;overflow:hidden;margin:4px 0}.bt i{display:block;height:100%;border-radius:99px}
+.bt i.good{background:var(--ok)}.bt i.ok{background:#65a30d}.bt i.warn{background:var(--warn)}.bt i.bad{background:var(--bad)}
+.bar p{margin:0;font-size:13px;color:var(--mut)}
+table{border-collapse:collapse;width:100%;font-size:13.5px}th,td{text-align:left;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}th{background:#f4f7ff}
+canvas{width:100%;display:block;border:1px solid var(--line);border-radius:8px;background:#fff}
+mark{padding:0 2px;border-radius:3px}mark.f{background:#fde68a}mark.g{background:#fecaca}mark.s{background:#e9d5ff}mark.r{background:#bfdbfe}
+.seg{margin:4px 0}.seg time{color:var(--mut);font-size:12px;margin-right:6px}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:12.5px;margin:6px 0}.legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:4px;vertical-align:-1px}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:800px){.two{grid-template-columns:1fr}}
+ul.tight{margin:4px 0;padding-left:20px}
+.muted{color:var(--mut);font-size:13px}
+.players video,.players audio{width:100%;margin-top:6px;border-radius:8px}
+@media print{body{background:#fff}.top,.card.notice,#setup,#live,#actions,.players{display:none!important}.card{box-shadow:none;border:1px solid #ccc;break-inside:avoid}}
+.gate{position:fixed;inset:0;z-index:1000;background:rgba(15,27,45,.78);overflow:auto;display:flex;justify-content:center;padding:24px 12px}
+.gbox{background:#fff;border-radius:14px;max-width:520px;width:100%;padding:22px;margin:auto}
+.gbox h2{margin:0 0 6px}.gbox label{margin-top:10px}
+.gbox input[type=email],.gbox input[type=tel]{width:100%;padding:9px 10px;border:1px solid #cbd5e1;border-radius:8px;font:inherit;background:#fff}
+.gbox .chk{display:flex;gap:8px;align-items:flex-start;font-weight:400;font-size:13.5px;color:var(--ink);margin:10px 0 0}
+.gbox .chk input{margin-top:4px;flex:none}
+.gbox button{width:100%;margin-top:12px}
+.gerr{color:var(--bad);min-height:20px;margin:8px 0 0;font-size:14px}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.foot{padding:18px 16px 30px;color:var(--mut);font-size:13px;text-align:center}
+.foot a{color:var(--pri)}
+@media print{.gate,.foot{display:none!important}}
+/* ===== Excel Vibez brand layer (royal blue) ===== */
+@font-face{font-family:"Inter";src:url(fonts/inter-latin-wght-normal.woff2) format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Poppins";src:url(fonts/poppins-latin-600-normal.woff2) format("woff2");font-weight:600;font-style:normal;font-display:swap}
+@font-face{font-family:"Poppins";src:url(fonts/poppins-latin-700-normal.woff2) format("woff2");font-weight:700;font-style:normal;font-display:swap}
+:root{--bg:#eef2fb;--ink:#0c1633;--mut:#55637f;--pri:#2a4fd6;--pri2:#5b8def;--navy:#0b1f5c;--royal:#4169e1;--soft:#e6edff;--line:#dfe6f5;--shadow:0 1px 2px rgba(11,31,92,.05),0 10px 28px rgba(11,31,92,.07);--head:"Poppins","Inter",system-ui,sans-serif}
+body{font-family:"Inter",system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;background:radial-gradient(1100px 480px at 50% -140px,#dbe6ff 0,transparent 70%),var(--bg);-webkit-font-smoothing:antialiased}
+.top{position:relative;overflow:hidden;background:linear-gradient(135deg,#0b1f5c 0%,#16348f 50%,#2a4fd6 100%);color:#fff;padding:0;margin-bottom:22px;border-radius:0 0 30px 30px;box-shadow:0 14px 40px rgba(11,31,92,.25)}
+.top::before{content:"";position:absolute;width:560px;height:560px;right:-150px;top:-270px;border-radius:50%;border:1.5px solid rgba(207,224,255,.3);box-shadow:0 0 0 70px rgba(207,224,255,.05),0 0 0 140px rgba(207,224,255,.04);pointer-events:none}
+.top::after{content:"";position:absolute;width:340px;height:340px;left:-110px;bottom:-200px;border-radius:50%;background:radial-gradient(circle,rgba(91,141,239,.5),transparent 70%);pointer-events:none}
+.top .wrap{position:relative;z-index:1}
+.nav{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 0;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:12px;color:#fff;text-decoration:none}
+.ev-logo{width:46px;height:46px;flex:none;display:block}
+.top .ev-logo{filter:drop-shadow(0 5px 12px rgba(0,0,0,.3))}
+.brand b{font:700 22px/1.1 var(--head);letter-spacing:.2px;display:block}
+.brand span{font-size:12px;opacity:.85;letter-spacing:.3px}
+.navr{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:7px;padding:7px 13px;border-radius:99px;font-size:13px;font-weight:600;color:#fff;text-decoration:none;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.24);transition:background .15s}
+.pill:hover{background:rgba(255,255,255,.24)}
+.pill svg{width:17px;height:17px;flex:none}
+.hero{padding:24px 0 42px;max-width:920px}
+.eyebrow{display:inline-block;font-size:12px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:#cfe0ff;margin-bottom:12px}
+.top h1{font:700 clamp(32px,5.4vw,50px)/1.1 var(--head);margin:0;letter-spacing:-.4px}
+.top h1 em{font-style:normal;background:linear-gradient(90deg,#fff,#a9c4ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+.top p.lead{margin:16px 0 0;font-size:17px;max-width:650px;opacity:.95;line-height:1.55}
+.tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:20px}
+.tags span{font-size:12.5px;font-weight:600;padding:5px 12px;border-radius:99px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22)}
+.tagline{margin-top:22px;font:600 13px var(--head);letter-spacing:.5px;color:#cfe0ff}
+.card{border-radius:18px;padding:22px 24px;box-shadow:var(--shadow)}
+.card h2{font:600 19px var(--head);color:var(--navy);display:flex;align-items:center;gap:10px}
+.card h2::before{content:"";width:5px;height:20px;border-radius:4px;background:linear-gradient(var(--royal),var(--navy));flex:none}
+.card h3{color:var(--pri);font-family:var(--head);font-weight:600}
+.notice{border-left:1px solid #f3dfb5;background:linear-gradient(180deg,#fffaf0,#fff);border:1px solid #f3dfb5}
+.notice h2::before{background:linear-gradient(#f59e0b,#d97706)}
+button{border-radius:11px;padding:11px 18px;background:linear-gradient(180deg,#3d66e8,#2a4fd6);box-shadow:0 6px 14px rgba(42,79,214,.28);transition:transform .12s,box-shadow .12s}
+button:hover{filter:none;transform:translateY(-1px);box-shadow:0 10px 20px rgba(42,79,214,.36)}
+button:active{transform:none}button:disabled{box-shadow:none;transform:none}
+button.sec{background:var(--soft);color:var(--pri);box-shadow:none}
+button.red{background:linear-gradient(180deg,#ef4444,#dc2626);box-shadow:0 6px 14px rgba(220,38,38,.25)}
+button:focus-visible,input:focus-visible,select:focus-visible,a:focus-visible{outline:3px solid rgba(65,105,225,.45);outline-offset:2px}
+input[type=text],select,.gbox input[type=email],.gbox input[type=tel]{border:1px solid #c9d5ee;border-radius:10px;padding:10px 12px}
+input:focus,select:focus{border-color:var(--royal)}
+.vwrap{border-radius:16px;box-shadow:0 12px 30px rgba(11,31,92,.28)}
+.m,.stat{background:linear-gradient(180deg,#fff,#f4f7ff);border-radius:12px}
+.m b,.stat b{font-family:var(--head);color:var(--navy)}
+.meter i{background:linear-gradient(90deg,var(--pri2),var(--pri))}
+.ring span{font-family:var(--head);color:var(--navy)}
+th{color:var(--navy)}
+.gate{background:radial-gradient(900px 500px at 70% 0,rgba(65,105,225,.45),transparent 60%),rgba(8,18,56,.88);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.gbox{border-radius:22px;box-shadow:0 30px 80px rgba(0,0,0,.4);padding:26px}
+.gbox h2{font-family:var(--head);color:var(--navy)}
+.gbox a{color:var(--pri);font-weight:600}
+.gbrand{display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+.gbrand b{font:700 19px var(--head);color:var(--navy);display:block}.gbrand span{font-size:12px;color:var(--mut)}
+.about{display:grid;grid-template-columns:210px 1fr;gap:28px;align-items:center;background:linear-gradient(135deg,#0b1f5c,#1b3ba8 60%,#2a4fd6);color:#fff;border:0;position:relative;overflow:hidden;padding:26px 28px}
+.about::before{content:"";position:absolute;width:420px;height:420px;right:-120px;top:-190px;border-radius:50%;border:1.5px solid rgba(207,224,255,.28);box-shadow:0 0 0 60px rgba(207,224,255,.05);pointer-events:none}
+.about>*{position:relative}
+.about h2{color:#fff;font-size:13px;letter-spacing:1.4px;text-transform:uppercase;margin:0 0 8px}.about h2::before{background:#cfe0ff}
+.about .photo{width:210px;height:210px;border-radius:26px;object-fit:cover;border:3px solid rgba(255,255,255,.55);box-shadow:0 16px 36px rgba(0,0,0,.35);display:block}
+.about .who{font:700 28px/1.15 var(--head);margin:0}
+.about .role{color:#cfe0ff;font-weight:600;margin:4px 0 10px}
+.about p{margin:0 0 14px;opacity:.96;max-width:560px}
+.about .tg{font:600 13px var(--head);letter-spacing:.4px;color:#cfe0ff;margin:0 0 14px}
+.about .navr{margin-top:2px}
+.foot{background:var(--navy);color:#c3d1f5;text-align:left;padding:30px 0 34px;margin-top:30px;border-radius:30px 30px 0 0}
+.foot .wrap{display:grid;grid-template-columns:1.5fr 1fr;gap:24px}
+.foot a{color:#fff}
+.foot .fb{display:flex;gap:12px;align-items:center}
+.foot .fb b{font:700 18px var(--head);color:#fff;display:block}.foot .fb span{font-size:12.5px;opacity:.85}
+.foot .fl{display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.foot small{display:block;grid-column:1/-1;opacity:.75;font-size:12px;line-height:1.6;border-top:1px solid rgba(255,255,255,.14);padding-top:14px}
+.rpt-head,.rpt-foot{display:none}
+.rpt-head{align-items:center;gap:14px;padding:14px 18px;border-radius:14px;background:linear-gradient(135deg,#0b1f5c,#2a4fd6);color:#fff;margin-bottom:14px;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+.rpt-head .ev-logo{width:42px;height:42px}
+.rpt-head b{font:700 18px var(--head);display:block}.rpt-head span{font-size:12px;opacity:.88}
+.rpt-head .rd{margin-left:auto;text-align:right;font-size:12.5px}
+.rpt-foot{margin-top:14px;padding:12px 14px;border-top:2px solid var(--royal);font-size:12px;color:var(--mut);line-height:1.55}
+.rpt-head.show,.rpt-foot.show{display:flex}.rpt-foot.show{display:block}
+@media print{.rpt-head{display:flex}.rpt-foot{display:block}.about,.top{display:none!important}body{background:#fff}}
+@media(max-width:700px){.about{grid-template-columns:1fr;gap:18px}.about .photo{width:130px;height:130px;border-radius:20px}.foot .wrap{grid-template-columns:1fr}.top{border-radius:0 0 22px 22px}}
+@media(max-width:560px){.nav .pill span{display:none}.nav .pill{padding:8px}}
+</style>
+</head>
+<body>
+<svg id="evSprite" width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><symbol id="ev-mark" viewBox="0 0 120 120"><defs>
+    <linearGradient id="evg" x1="8" y1="4" x2="112" y2="116" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#6b94f2"/>
+      <stop offset=".5" stop-color="#3a5fdc"/>
+      <stop offset="1" stop-color="#0b1f5c"/>
+    </linearGradient>
+    <linearGradient id="evs" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect width="120" height="120" rx="30" fill="url(#evg)"/>
+  <rect width="120" height="62" rx="30" fill="url(#evs)"/>
+  <ellipse cx="60" cy="60" rx="52" ry="19" transform="rotate(-28 60 60)" fill="none" stroke="#cfe0ff" stroke-opacity=".38" stroke-width="2"/>
+  <circle cx="107" cy="33" r="3.6" fill="#cfe0ff"/>
+  <path fill="#fff" d="M25 30h30v10H35.5v12H52v10H35.5v13H56v10H25z"/>
+  <path fill="#fff" d="M59 30h12.5l8.5 38 8.5-38H101L87 90H73z"/>
+  <path fill="#cfe0ff" d="M101 14l2.1 5.4 5.4 2.1-5.4 2.1-2.1 5.4-2.1-5.4-5.4-2.1 5.4-2.1z"/></symbol><symbol id="ic-in" viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8" cy="8.2" r="1.3" fill="currentColor"/><path d="M8 11v6M12 17v-6M12 13.2c0-1.4 1-2.2 2.3-2.2 1.5 0 2.2.9 2.2 2.4V17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol><symbol id="ic-yt" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="4.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 9.2v5.6l5-2.8z" fill="currentColor"/></symbol><symbol id="ic-ig" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.3" cy="6.7" r="1.1" fill="currentColor"/></symbol></svg>
+<div id="gate" class="gate hidden" role="dialog" aria-modal="true" aria-labelledby="gTitle">
+  <form id="gForm" class="gbox" novalidate autocomplete="on">
+    <div class="gbrand"><svg class="ev-logo" viewBox="0 0 120 120" aria-hidden="true"><use href="#ev-mark"/></svg><div><b>SpeakWell</b><span>by Excel Vibez &middot; CA Alok Sethi</span></div></div>
+    <h2 id="gTitle">Register to use SpeakWell</h2>
+    <p class="muted">SpeakWell is free. We ask for a few details once so we can count users and keep you posted. Your recordings and report never leave your device.</p>
+    <label for="gName">Full name *</label>
+    <input type="text" id="gName" name="name" autocomplete="name" maxlength="80" required>
+    <label for="gEmail">Email *</label>
+    <input type="email" id="gEmail" name="email" autocomplete="email" maxlength="254" required>
+    <label for="gCity">City *</label>
+    <input type="text" id="gCity" name="city" autocomplete="address-level2" maxlength="60" required>
+    <label for="gPhone">WhatsApp number * <span class="muted">(10-digit Indian number, or +country code)</span></label>
+    <input type="tel" id="gPhone" name="tel" autocomplete="tel" maxlength="20" inputmode="tel" required>
+    <div class="hp" aria-hidden="true"><label for="gHp">Website</label><input type="text" id="gHp" name="website" tabindex="-1" autocomplete="off"></div>
+    <label class="chk"><input type="checkbox" id="gAge"> <span>I confirm that I am 18 years of age or older. *</span></label>
+    <label class="chk"><input type="checkbox" id="gConsent"> <span>I consent to my name, email, city and WhatsApp number being processed to create my access, count users and send me service messages about SpeakWell, as explained in the <a href="privacy.html" target="_blank" rel="noopener">Privacy Notice</a>. I can withdraw consent at any time. *</span></label>
+    <label class="chk"><input type="checkbox" id="gMkt"> <span>(Optional) Send me tips, updates and offers about AI-in-finance training on WhatsApp and email.</span></label>
+    <p class="gerr" id="gErr" role="alert"></p>
+    <button type="submit" id="gBtn">Register and continue</button>
+  </form>
+</div>
+<header class="top"><div class="wrap">
+  <div class="nav">
+    <a class="brand" href="./" aria-label="SpeakWell by Excel Vibez"><svg class="ev-logo" viewBox="0 0 120 120" aria-hidden="true"><use href="#ev-mark"/></svg><div><b>SpeakWell</b><span>by Excel Vibez</span></div></a>
+    <div class="navr"><a class="pill" href="https://www.linkedin.com/in/caaloksethi" target="_blank" rel="noopener" aria-label="LinkedIn - CA Alok Sethi"><svg aria-hidden="true"><use href="#ic-in"/></svg><span>LinkedIn</span></a><a class="pill" href="https://www.youtube.com/@aloksethisir" target="_blank" rel="noopener" aria-label="YouTube - Alok Sethi Sir"><svg aria-hidden="true"><use href="#ic-yt"/></svg><span>YouTube</span></a><a class="pill" href="https://www.instagram.com/caaloksethi/" target="_blank" rel="noopener" aria-label="Instagram - caaloksethi"><svg aria-hidden="true"><use href="#ic-ig"/></svg><span>Instagram</span></a></div>
+  </div>
+  <div class="hero">
+    <span class="eyebrow">AI Speech Coach &middot; Toastmasters-style evaluation</span>
+    <h1>Speak with <em>confidence</em>.<br>Your personal AI speech coach.</h1>
+    <p class="lead">Record yourself on camera and get a Toastmasters-style evaluation of language, vocal delivery and body language.</p>
+    <div class="tags"><span>Face + voice analysis</span><span>Fillers, grammar &amp; pace</span><span>Your recordings stay on your device</span><span>Free</span></div>
+    <div class="tagline">ExcelVibez &mdash; Cosmos of Enormous Learnings</div>
+  </div>
+</div></header>
 
+<main class="wrap">
+<div class="rpt-head"><svg class="ev-logo" viewBox="0 0 120 120" aria-hidden="true"><use href="#ev-mark"/></svg><div><b>SpeakWell &middot; Speech Evaluation Report</b><span>by Excel Vibez &middot; CA Alok Sethi</span></div><div class="rd" id="rptDate"></div></div>
+<section class="card notice" role="note">
+  <h2>Privacy and confidentiality notice</h2>
+  <ul>
+    <li>Do <b>not</b> speak, show or read out confidential or client-identifiable information (unpublished financials, PAN/Aadhaar/bank details, passwords, UPSI) while recording.</li>
+    <li>Video, audio and analysis stay in your browser; this page never uploads them. Two exceptions: (1) Chrome/Edge speech recognition sends your voice to the browser vendor's cloud service to produce the transcript; (2) the face-analysis model files are downloaded from public CDNs the first time.</li>
+    <li>If you record other people (for example trainees), take their informed consent and handle the files in line with the Digital Personal Data Protection Act, 2023.</li>
+  </ul>
+</section>
+
+<section class="card" id="setup">
+  <h2>1. Set up your session</h2>
+  <div class="grid3">
+    <div><label for="topic">Speech topic (optional)</label><input type="text" id="topic" maxlength="120" placeholder="e.g. Ice Breaker - My journey as a CA"></div>
+    <div><label for="stype">Timing (Toastmasters lights)</label>
+      <select id="stype">
+        <option value="free">No timing</option>
+        <option value="tt">Table Topics (1:00 / 1:30 / 2:00)</option>
+        <option value="ev">Evaluation (2:00 / 2:30 / 3:00)</option>
+        <option value="ib">Ice Breaker (4:00 / 5:00 / 6:00)</option>
+        <option value="std">Prepared speech (5:00 / 6:00 / 7:00)</option>
+      </select></div>
+    <div><label for="lang">Speech recognition language</label>
+      <select id="lang"><option value="en-IN" selected>English (India)</option><option value="en-US">English (US)</option><option value="en-GB">English (UK)</option></select></div>
+  </div>
+  <div class="row" style="margin-top:14px">
+    <button class="sec" id="pickDir" type="button">Choose save folder (optional)</button>
+    <span class="muted" id="dirName">No folder chosen - you will be asked when saving.</span>
+  </div>
+  <div class="chips" id="support" aria-label="Browser support"></div>
+  <p class="muted">Tips: use Chrome or Edge on a computer, sit facing a window or lamp, keep your face in frame, and stay silent for the 3-second countdown (it measures room noise). Keep sessions under about 30 minutes. For stable permissions, open this file through https or localhost rather than double-clicking it.</p>
+  <div class="row"><button id="startBtn" type="button">Start recording</button></div>
+  <div id="msg" role="status" aria-live="polite"></div>
+</section>
+
+<section class="card hidden" id="live">
+  <h2>2. Recording</h2>
+  <div class="live">
+    <div>
+      <div class="vwrap">
+        <video id="cam" muted playsinline autoplay></video>
+        <div class="badge"><span class="dot" id="recDot"></span><span id="clock">00:00</span></div>
+        <div class="light" id="light" title="Timing light"></div>
+        <div class="big hidden" id="count"></div>
+      </div>
+      <div id="caption" aria-live="off">Live captions appear here...</div>
+    </div>
+    <div>
+      <div class="metrics">
+        <div class="m"><span>Words per minute (running)</span><b id="mWpm">-</b></div>
+        <div class="m"><span>Filler words so far</span><b id="mFill">0</b></div>
+        <div class="m"><span>Expression</span><b id="mExpr">-</b></div>
+        <div class="m"><span>Eye contact (so far)</span><b id="mEye">-</b></div>
+        <div class="m"><span>Pauses (0.7 s or more)</span><b id="mPause">0</b></div>
+        <div class="m"><span>Pitch (Hz)</span><b id="mPitch">-</b></div>
+      </div>
+      <div class="m" style="margin-top:10px"><span>Voice level</span><div class="meter"><i id="meter"></i></div></div>
+      <div class="row" style="margin-top:14px"><button class="red" id="stopBtn" type="button" disabled>Stop and analyse</button></div>
+      <p class="muted">Light: green = minimum time reached, amber = approaching limit, red = time is up.</p>
+    </div>
+  </div>
+</section>
+
+<section class="hidden" id="results">
+  <div class="card" id="actions">
+    <h2>3. Save your session</h2>
+    <div class="row">
+      <button id="saveAll" type="button">Save video + audio + report to folder</button>
+      <button class="sec" id="saveV" type="button">Save video</button>
+      <button class="sec" id="saveA" type="button">Save audio</button>
+      <button class="sec" id="saveR" type="button">Download report (HTML)</button>
+      <button class="sec" id="printR" type="button">Print / Save as PDF</button>
+      <button class="sec" id="newS" type="button">New session</button>
+    </div>
+    <div id="msg2" class="muted" style="margin-top:8px" role="status" aria-live="polite"></div>
+    <div class="players" id="players"></div>
+  </div>
+  <div id="report"></div>
+</section>
+<section class="card about" aria-labelledby="abTitle">
+  <img class="photo" src="creator.jpg" width="210" height="210" alt="CA Alok Sethi" loading="lazy">
+  <div>
+    <h2 id="abTitle">Meet your coach</h2>
+    <p class="who">CA Alok Sethi</p>
+    <div class="role">Global Corporate Trainer &amp; AI Consultant</div>
+    <p>Working to create a difference in the life of masses.</p>
+    <div class="tg">ExcelVibez &mdash; Cosmos of Enormous Learnings</div>
+    <div class="navr"><a class="pill" href="https://www.linkedin.com/in/caaloksethi" target="_blank" rel="noopener" aria-label="LinkedIn - CA Alok Sethi"><svg aria-hidden="true"><use href="#ic-in"/></svg><span>LinkedIn</span></a><a class="pill" href="https://www.youtube.com/@aloksethisir" target="_blank" rel="noopener" aria-label="YouTube - Alok Sethi Sir"><svg aria-hidden="true"><use href="#ic-yt"/></svg><span>YouTube</span></a><a class="pill" href="https://www.instagram.com/caaloksethi/" target="_blank" rel="noopener" aria-label="Instagram - caaloksethi"><svg aria-hidden="true"><use href="#ic-ig"/></svg><span>Instagram</span></a></div>
+  </div>
+</section>
+</main>
+
+<footer class="foot"><div class="wrap">
+  <div>
+    <div class="fb"><svg class="ev-logo" viewBox="0 0 120 120" aria-hidden="true"><use href="#ev-mark"/></svg><div><b>SpeakWell</b><span>by Excel Vibez &middot; created by CA Alok Sethi</span></div></div>
+  </div>
+  <div class="fl">
+    <a href="privacy.html" target="_blank" rel="noopener">Privacy notice</a>
+    <a href="mailto:aloksethi.ai@gmail.com?subject=SpeakWell%20-%20data%20request">Withdraw consent / delete my data</a>
+    <a href="https://github.com/aloksethi-ai/SpeakWellwithAlok" target="_blank" rel="noopener">Open source (MIT) on GitHub</a>
+  </div>
+  <small>&copy; 2026 Excel Vibez &middot; CA Alok Sethi. ExcelVibez &mdash; Cosmos of Enormous Learnings. SpeakWell gives automated, indicative feedback for practice only. It is an independent tool and is not affiliated with, endorsed by or a substitute for evaluation by Toastmasters International.</small>
+</div></footer>
+<!-- ===================== PURE LOGIC (no DOM access) ===================== -->
+<script id="logic">
+'use strict';
+const PAUSE_MIN = 0.7, LONG_PAUSE = 2.5;
+const TIMING = {
+  free: null,
+  tt:  { name: 'Table Topics', g: 60, a: 90, r: 120 },
+  ev:  { name: 'Evaluation', g: 120, a: 150, r: 180 },
+  ib:  { name: 'Ice Breaker', g: 240, a: 300, r: 360 },
+  std: { name: 'Prepared speech', g: 300, a: 360, r: 420 }
+};
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const fmtTime = s => { s = Math.max(0, Math.round(s)); return String(Math.floor(s / 60)).padStart(2, '0') + ':' + String(s % 60).padStart(2, '0'); };
+const clamp = (x, a, b) => Math.min(b, Math.max(a, x));
+const sum = a => a.reduce((x, y) => x + y, 0);
+const mean = a => a.length ? sum(a) / a.length : 0;
+const sd = a => { if (a.length < 2) return 0; const m = mean(a); return Math.sqrt(mean(a.map(x => (x - m) ** 2))); };
+const median = a => { if (!a.length) return 0; const s = [...a].sort((x, y) => x - y); const m = s.length >> 1; return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2; };
+const pct = (a, p) => { if (!a.length) return 0; const s = [...a].sort((x, y) => x - y); return s[Math.min(s.length - 1, Math.max(0, Math.round((p / 100) * (s.length - 1))))]; };
+function interp(x, pts) {
+  if (x <= pts[0][0]) return pts[0][1];
+  for (let i = 1; i < pts.length; i++) {
+    if (x <= pts[i][0]) { const [x0, y0] = pts[i - 1], [x1, y1] = pts[i]; return y0 + (y1 - y0) * (x - x0) / (x1 - x0); }
+  }
+  return pts[pts.length - 1][1];
+}
+const wordsOf = t => (t.match(/[A-Za-z][A-Za-z'-]*|\d+/g) || []);
+
+/* ---------- Pitch detection (normalised autocorrelation, 70-400 Hz) ---------- */
+function pitchOf(buf, sr) {
+  const N = buf.length, minLag = Math.floor(sr / 400), maxLag = Math.min(Math.floor(sr / 70), N - 2);
+  let c0 = 0; for (let i = 0; i < N; i++) c0 += buf[i] * buf[i];
+  if (c0 <= 0) return -1;
+  const r = new Float32Array(maxLag + 2); let best = 0;
+  for (let lag = minLag; lag <= maxLag; lag++) {
+    let s = 0; const lim = N - lag;
+    for (let i = 0; i < lim; i++) s += buf[i] * buf[i + lag];
+    s = s / (c0 * (lim / N)); r[lag] = s; if (s > best) best = s;
+  }
+  if (best < 0.5) return -1;
+  for (let lag = minLag + 1; lag < maxLag; lag++) {
+    if (r[lag] >= 0.9 * best && r[lag] >= r[lag - 1] && r[lag] >= r[lag + 1]) {
+      const a = r[lag - 1], b = r[lag], c = r[lag + 1], d = a - 2 * b + c;
+      const shift = d !== 0 ? 0.5 * (a - c) / d : 0;
+      return sr / (lag + shift);
+    }
+  }
+  return -1;
+}
+
+/* ---------- Filler / crutch word detection ---------- */
+function prevWord(t, i) { const m = t.slice(0, i).match(/([A-Za-z']+)[^A-Za-z']*$/); return m ? m[1].toLowerCase() : ''; }
+function nextWord(t, i) { const m = t.slice(i).match(/^[^A-Za-z']*([A-Za-z']+)/); return m ? m[1].toLowerCase() : ''; }
+const LIKE_PREV = new Set("i you we they he she it would wouldn't should could do don't does doesn't did didn't not looks look looked sounds sound sounded feels feel felt seems seem seemed tastes taste smells smell something nothing anything someone anyone everyone just more most much is was be been are were as such what whatever who people those they'd i'd we'd you'd he'd she'd feeling nothing".split(' '));
+const LIKE_NEXT = new Set("to a an the this that these those it him her them us me you my your our their his what how when where who which some any one i we they".split(' '));
+const KIND_PREV = new Set("this that what these those a the some any every which each same other different new old one whole wide certain special another such no of what's".split(' '));
+const KIND_NEXT = new Set("a an the person people thing things work job problem issue question data support business course place system model idea case change project training experience situation solution behaviour behavior".split(' '));
+const FILLER_DEFS = [
+  { cat: 'hes', re: /\b(?:u+m+|u+h+|e+r+m?|a+h+|h+m+|m{2,})\b/gi },
+  { cat: 'phr', re: /\byou know\b/gi },
+  { cat: 'phr', re: /\bi mean\b/gi },
+  { cat: 'phr', re: /\bto be honest\b/gi },
+  { cat: 'phr', re: /\bor something\b/gi },
+  { cat: 'phr', re: /\band stuff\b/gi },
+  { cat: 'phr', re: /\b(?:kind|sort) of\b/gi, ok: (t, m) => !KIND_PREV.has(prevWord(t, m.index)) && !KIND_NEXT.has(nextWord(t, m.index + m[0].length)) },
+  { cat: 'wrd', re: /\b(?:basically|actually|literally|honestly|obviously|essentially|seriously|totally)\b/gi },
+  { cat: 'wrd', re: /\blike\b/gi, ok: (t, m) => !LIKE_PREV.has(prevWord(t, m.index)) && !LIKE_NEXT.has(nextWord(t, m.index + m[0].length)) }
+];
+const OPENER_RE = /^\s*(so|well|okay|ok|right|alright|anyway|anyways)\b(?=[\s,]+\S)/i;
+const FILLER_CATS = { hes: 'Hesitation sounds (um, uh, er)', phr: 'Crutch phrases', wrd: 'Crutch words', opn: 'Sentence openers' };
+const REP_SKIP = new Set(['that', 'had', 'very', 'so', 'no', 'bye', 'really', 'many', 'more']);
+
+/* ---------- Grammar & style rules (rule-based indicators, not a full checker) ---------- */
+const AUX = new Set("does did do will would can could should may might must shall to let lets make made help if".split(' '));
+const PAST_FORMS = "went|came|saw|ate|took|gave|said|got|made|knew|thought|wrote|told|found|began|bought|brought|met|paid|sent|spoke|understood|did|had|was|were";
+const NOT_AN = new Set("hour hours honest honor honour heir hr mba mri sms sip fm fy html nri nse llp rbi sme smes fmcg xml fdi fii mnc lcm".split(' '));
+const GRAMMAR_RULES = [
+  { re: /\bi (?:is|are|has)\b/gi, msg: 'Subject-verb agreement: use "I am" / "I have".' },
+  { re: /\b(?:he|she|it) (?:are|have|don't|do not)\b/gi, ok: (t, m) => !AUX.has(prevWord(t, m.index)), msg: 'Subject-verb agreement: with he/she/it use "is / has / doesn\'t".' },
+  { re: /\b(?:we|they|you|people|these|those) (?:is|was|has)\b/gi, msg: 'Subject-verb agreement: use "are / were / have" with plural subjects.' },
+  { re: /\b(?:everyone|everybody|everything|nobody|somebody|someone|anyone) (?:are|were|have)\b/gi, msg: 'These words take a singular verb ("everyone has").' },
+  { re: new RegExp("\\b(?:didn't|did not|doesn't|does not|don't|do not) (?:" + PAST_FORMS + ")\\b", 'gi'), msg: 'After did / does / do use the base verb (didn\'t go, not didn\'t went).' },
+  { re: new RegExp("\\b(?:did|does|do) (?:he|she|it|they|we|you|i) (?:" + PAST_FORMS + ")\\b", 'gi'), msg: 'In questions with did / does / do use the base verb.' },
+  { re: /\b(?:he|she) (?:go|come|work|need|want|make|take|give|say|know|think|like|live|play|study|speak|talk|write)\b/gi, ok: (t, m) => !AUX.has(prevWord(t, m.index)), msg: 'Third-person singular needs -s/-es (he works, she goes).' },
+  { re: /\b(?:more|most) (?:better|best|easier|easiest|faster|fastest|bigger|biggest|cheaper|cheapest|higher|highest|lower|lowest|worse|worst|smaller|smallest|taller|simpler|simplest|larger|largest|stronger|strongest|quicker|quickest)\b/gi, msg: 'Double comparative/superlative: drop "more/most".' },
+  { re: /\b(?:discuss|discussing|discussed|discusses) about\b/gi, msg: '"Discuss" takes a direct object: say "discuss the topic", not "discuss about".' },
+  { re: /\bemphasi[sz](?:e|es|ed|ing) on\b/gi, msg: '"Emphasize" takes a direct object: "emphasize the point".' },
+  { re: /\bcope up\b/gi, msg: 'Use "cope with".' },
+  { re: /\b(?:i am|i'm|he is|she is|we are|they are|you are) agree\b/gi, msg: 'Use "I agree" (agree is a verb here).' },
+  { re: /\b(?:should|could|would|must|might) of\b/gi, msg: 'Use "should have / could have / would have".' },
+  { re: /\bbetween you and i\b/gi, msg: 'After a preposition use "me": "between you and me".' },
+  { re: /\bless (?:people|items|errors|mistakes|words|things|students|clients|customers|employees|transactions|days|hours|minutes|years|members)\b/gi, msg: 'Use "fewer" with countable nouns.' },
+  { re: /\bmuch (?:people|things|students|friends|clients|companies|customers|employees|times|questions|issues|problems|mistakes)\b/gi, msg: 'Use "many" with countable nouns.' },
+  { re: /\b(?:informations|advices|feedbacks|knowledges|furnitures|equipments|staffs|luggages|homeworks|softwares|hardwares|evidences)\b/gi, msg: 'Uncountable noun in standard English - no plural form.' },
+  { re: /\b(?:there|here) is (?:many|several|few|two|three|four|five|six|seven|eight|nine|ten|a few|a number of|a lot of (?:people|things|issues|reasons|questions|clients))\b/gi, msg: 'Use "there are" before a plural.' },
+  { re: /\b(?:can|could|should|must|will|would|shall|may|might) to\b/gi, msg: 'No "to" after a modal verb.' },
+  { re: /\b(?:don't|didn't|doesn't|can't|won't|couldn't) (?:have|know|want|see|get|find) (?:no|nothing|nobody|nowhere)\b/gi, msg: 'Double negative.' },
+  { re: /\bme and (?:my \w+|him|her|them|you) (?:went|are|were|have|had|did|do|will|was|is|can)\b/gi, msg: 'As a subject use "My friend and I ...".' },
+  { re: /\b(?:yesterday|last (?:week|month|year|night|quarter)|(?:\d+|one|two|three|four|five|six|a few|several) (?:days?|weeks?|months?|years?) ago)\b[^.?!]{0,50}?\b(?:i|we|they|he|she) (?:go|come|see|eat|meet|buy|take|make|give|do|say|tell|get|send|speak|write|begin|bring|pay|find)\b/gi, msg: 'Possible tense mismatch: past-time reference with a present-tense verb.' },
+  { re: /\ba ([aeiou][a-z]*)\b/gi, ok: (t, m) => { const w = m[1].toLowerCase(); if (/^(?:uni|use|usu|usa|uti|eur|one|once|ubi|ura|ute|usb|ufo|uk$|us$)/.test(w)) return false; return !['or', 'and', 'is', 'are', 'as', 'at', 'if', 'in', 'on', 'of', 'to', 'it'].includes(w); }, msg: 'Use "an" before a vowel sound.' },
+  { re: /\ba (?:hour|hours|honest|honour|honor|heir)\b/gi, msg: 'Use "an" before a silent "h" (an hour, an honest).' },
+  { re: /\ban ([b-df-hj-np-tv-z][a-z]*)\b/gi, ok: (t, m) => { const w = m[1]; if (NOT_AN.has(w.toLowerCase())) return false; if (/^[FHLMNRSX][A-Z]{0,4}$/.test(w)) return false; return true; }, msg: 'Use "a" before a consonant sound.' },
+  { re: /\ban (?:universit\w*|unique|uniform\w*|unit|units|union|unions|unity|universal|use|used|useful|user|users|usual|usually|utility|utilities|european|one|once)\b/gi, msg: 'Use "a" before a "yoo/wun" sound (a university, a one-time).' },
+  { type: 'style', re: /\b(?:return|returned|returning|revert|reverted|reverting|reply|replied|replying)\s+back\b/gi, msg: 'Redundant "back" (revert / return / reply).' },
+  { type: 'style', re: /\b(?:repeat|repeated|repeating)\s+again\b/gi, msg: 'Redundant: "repeat" already means "again".' },
+  { type: 'style', re: /\b(?:past history|end result|final outcome|combine together|free gift|true fact|new innovation|future plans?|each and every one|very unique|more unique|most unique)\b/gi, msg: 'Redundant phrase - say it once.' },
+  { type: 'style', re: /\b(?:do the needful|kindly revert)\b/gi, msg: 'Dated, formulaic phrase - prefer "please take the necessary action" / "please reply".' },
+  { type: 'style', re: /\baccording to me\b/gi, msg: 'Prefer "in my view" / "in my opinion".' }
+];
+const STOP = new Set("about above after again also always among and another any are around because been before being between both but can could did does doing done down during each even every from further had has have having here how into its just like made make many more most much must myself need only other our out over really said same should since some such than that their them then there these they thing things this those through very was were what when where which while who whom will with would your you yours".split(' '));
+const WEAK = ['very', 'really', 'thing', 'things', 'stuff', 'good', 'nice', 'bad', 'big', 'a lot'];
+
+function findIssues(text) {
+  const out = [];
+  for (const d of FILLER_DEFS) for (const m of text.matchAll(d.re)) {
+    if (!m[0].length) continue; if (d.ok && !d.ok(text, m)) continue;
+    out.push({ s: m.index, e: m.index + m[0].length, kind: 'filler', cat: d.cat, text: m[0], msg: 'Filler / crutch word' });
+  }
+  const op = text.match(OPENER_RE);
+  if (op) { const st = op[0].indexOf(op[1]); out.push({ s: st, e: st + op[1].length, kind: 'filler', cat: 'opn', text: op[1], msg: 'Sentence opener used as a filler' }); }
+  for (const r of GRAMMAR_RULES) for (const m of text.matchAll(r.re)) {
+    if (!m[0].length) continue; if (r.ok && !r.ok(text, m)) continue;
+    out.push({ s: m.index, e: m.index + m[0].length, kind: r.type || 'grammar', text: m[0], msg: r.msg });
+  }
+  for (const m of text.matchAll(/\b([A-Za-z']+)\s+\1\b/gi)) {
+    if (REP_SKIP.has(m[1].toLowerCase())) continue;
+    out.push({ s: m.index, e: m.index + m[0].length, kind: 'repeat', text: m[0], msg: 'Repeated word (stumble)' });
+  }
+  out.sort((a, b) => a.s - b.s || (b.e - b.s) - (a.e - a.s));
+  const res = []; let end = -1;
+  for (const x of out) { if (x.s >= end) { res.push(x); end = x.e; } }
+  return res;
+}
+
+function analyzeText(segs) {
+  const segments = segs.map(s => ({ t: s.t, text: String(s.text || '').replace(/[\u2018\u2019]/g, "'").trim() })).filter(s => s.text);
+  const T = { segments, words: 0, fillers: { total: 0, byCat: { hes: 0, phr: 0, wrd: 0, opn: 0 }, list: {} }, repeats: 0, grammar: [], style: [], weak: {}, top: [] };
+  const all = [];
+  for (const sg of segments) {
+    sg.issues = findIssues(sg.text);
+    for (const is of sg.issues) {
+      if (is.kind === 'filler') { T.fillers.total++; T.fillers.byCat[is.cat]++; const k = is.text.toLowerCase(); T.fillers.list[k] = (T.fillers.list[k] || 0) + 1; }
+      else if (is.kind === 'repeat') T.repeats++;
+      else if (is.kind === 'grammar') T.grammar.push({ ...is, t: sg.t });
+      else T.style.push({ ...is, t: sg.t });
+    }
+    all.push(...wordsOf(sg.text).map(w => w.toLowerCase()));
+  }
+  const N = all.length; T.words = N;
+  const joined = all.join(' ');
+  T.segCount = segments.length;
+  const segLens = segments.map(s => wordsOf(s.text).length);
+  T.avgSeg = mean(segLens); T.longestSeg = segLens.length ? Math.max(...segLens) : 0;
+  const cnt = w => all.filter(x => x === w).length;
+  T.conn = { and: cnt('and'), so: cnt('so'), then: cnt('then'), but: cnt('but') };
+  T.andThen = (joined.match(/\band then\b/g) || []).length;
+  T.segStartConn = segments.filter(s => /^(?:and|so|then|but)\b/i.test(s.text)).length;
+  const types = new Set(all);
+  if (N >= 100) { const vals = []; for (let i = 0; i + 100 <= N; i += 100) vals.push(new Set(all.slice(i, i + 100)).size / 10); T.guiraud = mean(vals); }
+  else T.guiraud = N ? types.size / Math.sqrt(N) : 0;
+  T.longWordPct = N ? all.filter(w => w.length >= 8).length / N * 100 : 0;
+  const freq = {}; for (const w of all) if (w.length >= 4 && !STOP.has(w)) freq[w] = (freq[w] || 0) + 1;
+  T.top = Object.entries(freq).filter(e => e[1] >= 3).sort((a, b) => b[1] - a[1]).slice(0, 6);
+  for (const w of WEAK) { const c = w.includes(' ') ? (joined.match(new RegExp('\\b' + w + '\\b', 'g')) || []).length : cnt(w); if (c) T.weak[w] = c; }
+  T.weakCount = sum(Object.values(T.weak));
+  return T;
+}
+
+/* ---------- Scoring ---------- */
+const SC = {
+  filler: p => interp(p, [[0, 96], [1, 90], [2, 80], [4, 65], [6, 50], [10, 30]]),
+  grammar: p => interp(p, [[0, 96], [0.5, 88], [1, 80], [2, 66], [4, 48], [8, 30]]),
+  vocab: g => interp(g, [[3, 40], [5, 60], [6, 72], [7, 84], [8.5, 94]]),
+  pace: w => w < 120 ? interp(w, [[60, 35], [90, 55], [105, 75], [120, 92]]) : (w <= 160 ? 95 : interp(w, [[160, 92], [175, 80], [190, 62], [220, 40]])),
+  pitch: st => interp(st, [[0.5, 30], [1.5, 50], [2.5, 75], [3.5, 90], [5.5, 95], [8, 78], [12, 60]]),
+  vol: d => interp(d, [[1, 40], [2.5, 65], [4, 85], [6, 95], [10, 80], [15, 60]]),
+  eye: p => interp(p, [[10, 25], [30, 45], [50, 65], [70, 85], [85, 96]]),
+  warm: p => interp(p, [[0, 40], [10, 60], [25, 82], [40, 95], [65, 95], [85, 80], [100, 65]]),
+  variety: n => interp(n, [[1, 40], [2, 68], [3, 88], [4, 95], [5, 95]])
+};
+const band = s => s >= 85 ? ['Excellent', 'good'] : s >= 70 ? ['Good', 'ok'] : s >= 55 ? ['Developing', 'warn'] : ['Needs focus', 'bad'];
+
+function computeReport(I) {
+  const T = analyzeText(I.segments), dur = Math.max(1, I.duration), N = T.words;
+  const R = { T, dur, notes: [], cats: [] };
+  const eff = I.pauses.filter(p => p.dur < LONG_PAUSE), lng = I.pauses.filter(p => p.dur >= LONG_PAUSE);
+  const pauseTotal = sum(I.pauses.map(p => p.dur));
+  const speakSpan = Math.max(1, (I.lastVoice != null ? I.lastVoice : dur) - (I.firstVoice != null ? I.firstVoice : 0));
+  const speakTime = Math.max(1, speakSpan - pauseTotal);
+  R.eff = eff; R.lng = lng; R.pauseTotal = pauseTotal; R.speakTime = speakTime;
+  R.wpmOverall = N / (dur / 60); R.wpmSpeaking = N / (speakTime / 60);
+  R.hasText = N >= 10;
+  const per100 = x => N ? x / N * 100 : 0;
+
+  // timing verdict
+  const tm = TIMING[I.speechType] || null; R.timing = null;
+  if (tm) {
+    const ok = dur >= tm.g - 30 && dur <= tm.r + 30;
+    R.timing = { ...tm, ok, text: dur < tm.g ? 'finished before the green light' : dur < tm.a ? 'finished in the green zone' : dur < tm.r ? 'finished in the amber zone' : dur <= tm.r + 30 ? 'finished in the red zone (within the 30 s grace)' : 'ran beyond the red light plus 30 s grace' };
+  }
+
+  // language
+  if (R.hasText) {
+    const G = T.grammar.length, St = T.style.length, g100 = per100(G + 0.5 * St);
+    const gs = Math.round(clamp(SC.grammar(g100), 0, 100));
+    R.cats.push({ key: 'grammar', label: 'Grammar and sentence accuracy', weight: 12, score: gs,
+      detail: G + ' grammar issue' + (G === 1 ? '' : 's') + ' and ' + St + ' style point' + (St === 1 ? '' : 's') + ' in ' + N + ' words (' + g100.toFixed(1) + ' per 100 words).',
+      strength: 'Your sentences were largely accurate (' + g100.toFixed(1) + ' flagged items per 100 words).',
+      advice: 'Review the red and purple items in the transcript and repeat each corrected sentence aloud three times. Prepare two or three "model sentences" for your usual topics so correct patterns become automatic.' });
+    const g = T.guiraud, weakPct = per100(T.weakCount), topShare = T.top[0] ? per100(T.top[0][1]) : 0;
+    const vs = Math.round(clamp(SC.vocab(g) - (weakPct > 4 ? 6 : 0) - (topShare > 4 ? 5 : 0), 20, 98));
+    R.cats.push({ key: 'vocab', label: 'Vocabulary and word choice', weight: 8, score: vs,
+      detail: 'Lexical variety index ' + g.toFixed(1) + ' (about 6-7 is typical); ' + T.weakCount + ' vague word' + (T.weakCount === 1 ? '' : 's') + '; ' + T.longWordPct.toFixed(0) + '% longer words (8+ letters).',
+      strength: 'You used a healthy variety of words without leaning on vague terms.',
+      advice: 'Swap vague words (very, really, thing, stuff, good, nice) for precise ones, and avoid repeating the same key word' + (T.top[0] ? ' (you repeated "' + T.top[0][0] + '" ' + T.top[0][1] + ' times)' : '') + '. Keep a short list of 5 stronger synonyms for your most-used words.' });
+    const F = T.fillers.total, f100 = per100(F), fs = Math.round(clamp(SC.filler(f100), 0, 100));
+    const topF = Object.entries(T.fillers.list).sort((a, b) => b[1] - a[1])[0];
+    R.cats.push({ key: 'fillers', label: 'Filler words', weight: 15, score: fs,
+      detail: F + ' filler/crutch word' + (F === 1 ? '' : 's') + ' (' + f100.toFixed(1) + ' per 100 words, ' + (F / (dur / 60)).toFixed(1) + ' per minute)' + (T.repeats ? '; ' + T.repeats + ' repeated-word stumble' + (T.repeats === 1 ? '' : 's') : '') + '.',
+      strength: 'Very few filler words - your delivery sounded controlled.',
+      advice: 'Replace fillers with a deliberate silent pause and a breath' + (topF ? '. Your most frequent was "' + topF[0] + '" (' + topF[1] + 'x)' : '') + '. Practise ending every sentence with a full stop in your voice, then pause for one beat before the next.' });
+    const wp = R.wpmSpeaking, ps = Math.round(clamp(SC.pace(wp), 0, 100));
+    R.cats.push({ key: 'pace', label: 'Pace', weight: 10, score: ps,
+      detail: Math.round(wp) + ' words/min while speaking (' + Math.round(R.wpmOverall) + ' overall including pauses). Comfortable range for English speeches is roughly 120-160.',
+      strength: 'Your pace sat in the comfortable 120-160 words-per-minute range.',
+      advice: wp > 160 ? 'You spoke fast. Slow down by pausing at the end of each sentence and by stretching key words; mark breath points in your notes.' : 'You spoke slowly. Raise your energy, shorten pauses between ideas and rehearse with a timer to build momentum.' });
+  } else {
+    R.notes.push('Too little transcribed speech (under 10 words) for language, filler and pace scoring. Check that speech recognition is supported and the microphone was working.');
+  }
+
+  // pauses
+  if (I.firstVoice != null) {
+    const mins = dur / 60, epm = eff.length / mins; let s = 90;
+    if (epm < 1.5) s -= 15; if (epm > 10) s -= 12; s -= Math.min(30, lng.length * 6);
+    s = Math.round(clamp(s, 30, 98));
+    const longest = I.pauses.length ? Math.max(...I.pauses.map(p => p.dur)) : 0;
+    R.cats.push({ key: 'pauses', label: 'Use of pauses', weight: 10, score: s,
+      detail: eff.length + ' effective pause' + (eff.length === 1 ? '' : 's') + ' (0.7-2.5 s, ' + epm.toFixed(1) + ' per min), ' + lng.length + ' long hesitation' + (lng.length === 1 ? '' : 's') + ' (over 2.5 s); longest ' + longest.toFixed(1) + ' s.',
+      strength: 'You used pauses purposefully without losing momentum.',
+      advice: epm < 1.5 ? 'Use more deliberate pauses (about one second) before key points and after questions - silence adds emphasis and lets the audience absorb ideas.' : (lng.length ? 'Reduce long hesitations (over 2.5 s): rehearse your transitions so the next idea is ready before the current one ends.' : 'Pauses were frequent; make them purposeful by placing them at sentence ends rather than mid-sentence.') });
+  }
+
+  // vocal variety
+  let ps2 = null, vs2 = null;
+  if (I.pitches.length >= 40) {
+    const med = median(I.pitches), st = I.pitches.map(f => 12 * Math.log2(f / med)).filter(x => Math.abs(x) <= 10);
+    R.pitch = { median: med, p10: pct(I.pitches, 10), p90: pct(I.pitches, 90), sdSt: sd(st) }; ps2 = SC.pitch(R.pitch.sdSt);
+  }
+  if (I.speakDb.length >= 40) { R.vol = { avg: mean(I.speakDb), sdDb: sd(I.speakDb), p10: pct(I.speakDb, 10), p90: pct(I.speakDb, 90) }; vs2 = SC.vol(R.vol.sdDb); }
+  if (ps2 != null || vs2 != null) {
+    const sc = Math.round(clamp(ps2 != null && vs2 != null ? 0.65 * ps2 + 0.35 * vs2 : (ps2 != null ? ps2 : vs2), 0, 100));
+    R.cats.push({ key: 'vocal', label: 'Vocal variety (pitch and volume)', weight: 15, score: sc,
+      detail: (R.pitch ? 'Pitch variation ' + R.pitch.sdSt.toFixed(1) + ' semitones (median ' + Math.round(R.pitch.median) + ' Hz, typical range ' + Math.round(R.pitch.p10) + '-' + Math.round(R.pitch.p90) + ' Hz). ' : '') + (R.vol ? 'Volume varied by about ' + R.vol.sdDb.toFixed(1) + ' dB.' : ''),
+      strength: 'Good vocal variety - your pitch and volume moved with your message.',
+      advice: 'Add contrast: slow down and lower your voice for serious points, raise pitch and energy for good news, and use a louder-then-softer pattern to stress key words. Practise reading a paragraph three ways (calm, excited, urgent).' });
+  }
+
+  // non-verbal
+  const Fc = I.face; R.face = null;
+  if (Fc && Fc.frames > 20) {
+    const det = Fc.det, shares = {}; for (const k of Object.keys(Fc.counts)) shares[k] = det ? Fc.counts[k] / det * 100 : 0;
+    const eyePct = det ? Fc.eye / det * 100 : 0, noFace = (Fc.frames - det) / Fc.frames * 100;
+    R.face = { det, shares, eyePct, noFace, secs: Fc.secs };
+    if (noFace > 40) R.notes.push('Your face was not detected for ' + noFace.toFixed(0) + '% of the session - non-verbal scores may be unreliable. Improve lighting and keep your face in frame.');
+    if (det > 20) {
+      const es = Math.round(clamp(SC.eye(eyePct), 0, 100));
+      R.cats.push({ key: 'eye', label: 'Eye contact (towards camera)', weight: 15, score: es,
+        detail: eyePct.toFixed(0) + '% of detected time facing and looking toward the camera. Looking at notes or away reduces this; brief glances are normal.',
+        strength: 'Strong eye contact - you stayed connected with the camera/audience.',
+        advice: 'Aim for 70%+ of the time looking into the lens. Place notes close to the camera, memorise your opening and closing, and "land" each thought on one imaginary person before moving on.' });
+      const labelsUsed = Object.values(shares).filter(v => v >= 5).length, warm = (shares.Smiling || 0) + (shares.Pleasant || 0);
+      const xs = Math.round(clamp(0.6 * SC.warm(warm) + 0.4 * SC.variety(labelsUsed), 0, 100));
+      R.cats.push({ key: 'expr', label: 'Facial expression', weight: 15, score: xs,
+        detail: 'Smiling/pleasant ' + warm.toFixed(0) + '% of the time; ' + labelsUsed + ' distinct expression type' + (labelsUsed === 1 ? '' : 's') + ' used. Neutral ' + (shares.Neutral || 0).toFixed(0) + '%.',
+        strength: 'Warm, varied facial expression that matched your message.',
+        advice: 'Let your face carry the story: smile when welcoming or sharing good news, raise your eyebrows to emphasise surprises, and soften or tighten your expression for serious points. Practise in a mirror with the same sentence in three moods.' });
+    }
+  } else if (I.hadVideo) R.notes.push('Face analysis did not run (model failed to load or no face data). Check your internet connection and reload.');
+
+  const wsum = sum(R.cats.map(c => c.weight));
+  R.overall = wsum ? Math.round(sum(R.cats.map(c => c.score * c.weight)) / wsum) : null;
+  const sorted = [...R.cats].sort((a, b) => b.score - a.score);
+  R.strengths = sorted.filter(c => c.score >= 75).slice(0, 3);
+  R.improve = [...sorted].reverse().filter(c => c.score < 85).slice(0, 3);
+  R.challenge = R.improve[0] || null;
+  if (N && N < 60) R.notes.push('Short sample (' + N + ' words): language scores are low-confidence. Record at least 2-3 minutes for dependable results.');
+  return R;
+}
+</script>
+
+<!-- ===================== APPLICATION ===================== -->
+<script id="app">
+'use strict';
+const $ = id => document.getElementById(id);
+const sleep = ms => new Promise(r => setTimeout(r, ms));
+const S = { dir: null };
+const A = {}, Fc = {};
+const LABEL_COLORS = { Smiling: '#16a34a', Pleasant: '#84cc16', Animated: '#f59e0b', Neutral: '#94a3b8', 'Serious/Tense': '#ef4444', 'No face': '#e2e8f0' };
+
+function say(msg, kind, el) {
+  const m = $(el || 'msg'); m.textContent = msg;
+  if (!el) { m.className = 'show ' + (kind || ''); } 
+}
+function resetState() {
+  Object.assign(S, { stream: null, hasVideo: false, vRec: null, aRec: null, vChunks: [], aChunks: [], vBlob: null, aBlob: null, vMime: '', aMime: '', recording: false, phase: 'idle', t0: 0, duration: 0, segments: [], pauses: [], lastInterim: '', liveFill: 0, timers: [], rec: null, stopping: false, asrErrs: 0, seen: new Set(), recId: 0, results: null, wantAsr: false });
+  Object.assign(A, { ctx: null, an: null, buf: null, thr: 0.02, calib: [], bins: [], pitches: [], speakDb: [], firstVoice: null, lastVoice: null, lastPitch: 0, rms: 0 });
+  Object.assign(Fc, { lm: null, frames: 0, det: 0, eye: 0, counts: {}, secBins: [], sm: {}, label: '-', lastEye: false });
+}
+resetState();
+
+function support() {
+  const items = [
+    ['Camera and microphone', !!(navigator.mediaDevices && navigator.mediaDevices.getUserMedia)],
+    ['Recording', !!window.MediaRecorder],
+    ['Speech recognition', !!(window.SpeechRecognition || window.webkitSpeechRecognition)],
+    ['Choose-folder saving', !!window.showDirectoryPicker],
+    ['Secure context', !!window.isSecureContext]
+  ];
+  $('support').innerHTML = items.map(([n, ok]) => '<span class="chip ' + (ok ? 'y' : 'n') + '">' + (ok ? '&#10003; ' : '&#10007; ') + esc(n) + '</span>').join('');
+  if (!items[0][1] || !items[1][1]) say('This browser cannot record. Please use the latest Chrome or Edge on a computer.', 'bad');
+  else if (!items[2][1]) say('Speech recognition is not available in this browser: you will still get video/audio, pitch, pauses and facial analysis, but no transcript-based scores. Chrome or Edge is recommended.', 'warn');
+}
+support();
+
+$('pickDir').onclick = async () => {
+  if (!window.showDirectoryPicker) { say('Your browser cannot choose a folder; files will be saved to your normal Downloads location.', 'warn'); return; }
+  try { S.dir = await window.showDirectoryPicker({ mode: 'readwrite' }); $('dirName').textContent = 'Folder: ' + S.dir.name; }
+  catch (e) { if (e.name !== 'AbortError') say('Could not use that folder (' + e.message + '). Try a new sub-folder; browsers block some system folders.', 'warn'); }
+};
+
+/* ---------- Audio analysis ---------- */
+function startAudio(stream) {
+  const AC = window.AudioContext || window.webkitAudioContext;
+  A.ctx = new AC(); A.an = A.ctx.createAnalyser(); A.an.fftSize = 2048;
+  A.ctx.createMediaStreamSource(new MediaStream(stream.getAudioTracks())).connect(A.an);
+  A.buf = new Float32Array(A.an.fftSize);
+  if (A.ctx.state === 'suspended') A.ctx.resume();
+  S.timers.push(setInterval(audioTick, 50));
+}
+function audioTick() {
+  if (!A.an) return;
+  A.an.getFloatTimeDomainData(A.buf);
+  let s = 0; for (let i = 0; i < A.buf.length; i++) s += A.buf[i] * A.buf[i];
+  const rms = Math.sqrt(s / A.buf.length); A.rms = rms;
+  $('meter').style.width = (clamp((20 * Math.log10(rms + 1e-9) + 60) / 60, 0, 1) * 100).toFixed(0) + '%';
+  if (S.phase === 'calibrating') { A.calib.push(rms); return; }
+  if (!S.recording) return;
+  const t = (performance.now() - S.t0) / 1000, sec = Math.floor(t);
+  const bin = A.bins[sec] || (A.bins[sec] = { p: [], db: [] });
+  if (rms > A.thr) {
+    const db = 20 * Math.log10(rms); bin.db.push(db); A.speakDb.push(db);
+    const f = pitchOf(A.buf, A.ctx.sampleRate);
+    if (f > 0) { bin.p.push(f); A.pitches.push(f); A.lastPitch = f; }
+    if (A.firstVoice === null) A.firstVoice = t;
+    else if (t - A.lastVoice >= PAUSE_MIN) S.pauses.push({ start: A.lastVoice, dur: t - A.lastVoice });
+    A.lastVoice = t;
+  }
+}
+
+/* ---------- Face analysis (MediaPipe Face Landmarker) ---------- */
+async function initFace() {
+  const versions = ['0.10.14', 'latest'];
+  for (const v of versions) {
+    try {
+      const base = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision' + (v === 'latest' ? '' : '@' + v);
+      const mod = await import(base + '/+esm');
+      const fileset = await mod.FilesetResolver.forVisionTasks(base + '/wasm');
+      const opts = d => ({ baseOptions: { modelAssetPath: 'https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task', delegate: d }, runningMode: 'VIDEO', numFaces: 1, outputFaceBlendshapes: true });
+      try { Fc.lm = await mod.FaceLandmarker.createFromOptions(fileset, opts('GPU')); }
+      catch (e) { Fc.lm = await mod.FaceLandmarker.createFromOptions(fileset, opts('CPU')); }
+      return true;
+    } catch (e) { console.warn('Face model load failed for', v, e); }
+  }
+  return false;
+}
+function faceTick() {
+  if (!Fc.lm || !S.recording) return;
+  const v = $('cam'); if (v.readyState < 2) return;
+  const sec = Math.floor((performance.now() - S.t0) / 1000);
+  let res; try { res = Fc.lm.detectForVideo(v, performance.now()); } catch (e) { return; }
+  Fc.frames++;
+  const bs = res && res.faceBlendshapes && res.faceBlendshapes[0], lm = res && res.faceLandmarks && res.faceLandmarks[0];
+  let label = 'No face';
+  if (bs && lm) {
+    Fc.det++;
+    const c = {}; for (const k of bs.categories) c[k.categoryName] = k.score;
+    const g = n => c[n] || 0;
+    const raw = {
+      smile: (g('mouthSmileLeft') + g('mouthSmileRight')) / 2,
+      browUp: Math.max(g('browInnerUp'), (g('browOuterUpLeft') + g('browOuterUpRight')) / 2),
+      browDown: (g('browDownLeft') + g('browDownRight')) / 2,
+      frown: (g('mouthFrownLeft') + g('mouthFrownRight')) / 2,
+      wide: (g('eyeWideLeft') + g('eyeWideRight')) / 2,
+      lookR: (g('eyeLookInLeft') + g('eyeLookOutRight')) / 2,
+      lookL: (g('eyeLookOutLeft') + g('eyeLookInRight')) / 2,
+      up: (g('eyeLookUpLeft') + g('eyeLookUpRight')) / 2,
+      down: (g('eyeLookDownLeft') + g('eyeLookDownRight')) / 2,
+      blink: (g('eyeBlinkLeft') + g('eyeBlinkRight')) / 2
+    };
+    const m = Fc.sm; for (const k in raw) m[k] = m[k] === undefined ? raw[k] : m[k] + 0.4 * (raw[k] - m[k]);
+    if (m.smile > 0.45) label = 'Smiling';
+    else if (m.smile > 0.2) label = 'Pleasant';
+    else if (m.browDown > 0.45 || m.frown > 0.3) label = 'Serious/Tense';
+    else if (m.browUp > 0.4 || m.wide > 0.35) label = 'Animated';
+    else label = 'Neutral';
+    const nose = lm[1], l = lm[234], r = lm[454], ratio = (nose.x - l.x) / (r.x - l.x);
+    const frontal = Math.abs(ratio - 0.5) < 0.15;
+    let eye = frontal && Math.max(m.lookR, m.lookL, m.up) < 0.35 && m.down < 0.5;
+    if (raw.blink > 0.5) eye = Fc.lastEye;
+    Fc.lastEye = eye; if (eye) Fc.eye++;
+    Fc.counts[label] = (Fc.counts[label] || 0) + 1;
+  }
+  Fc.label = label;
+  const b = Fc.secBins[sec] || (Fc.secBins[sec] = {}); b[label] = (b[label] || 0) + 1;
+}
+
+/* ---------- Speech recognition ---------- */
+function startRecognition() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) return;
+  S.wantAsr = true;
+  const id = ++S.recId, rec = new SR();
+  rec.continuous = true; rec.interimResults = true; rec.lang = $('lang').value; rec.maxAlternatives = 1;
+  rec.onresult = e => {
+    let interim = '';
+    for (let i = e.resultIndex; i < e.results.length; i++) {
+      const r = e.results[i], txt = r[0].transcript.trim();
+      if (r.isFinal) {
+        const key = id + ':' + i; if (S.seen.has(key)) continue; S.seen.add(key);
+        if (txt) { S.segments.push({ t: (performance.now() - S.t0) / 1000, text: txt }); S.liveFill += findIssues(txt.replace(/[\u2018\u2019]/g, "'")).filter(x => x.kind === 'filler').length; }
+      } else interim += txt + ' ';
+    }
+    S.lastInterim = interim.trim();
+    $('caption').textContent = interim.trim() || (S.segments.length ? S.segments[S.segments.length - 1].text : '...');
+  };
+  rec.onerror = e => {
+    S.asrErrs++;
+    if (e.error === 'not-allowed' || e.error === 'service-not-allowed') { S.wantAsr = false; say('Speech recognition was blocked by the browser. Recording continues without a transcript.', 'warn'); }
+    else if (e.error === 'network') { say('Speech recognition needs an internet connection - transcript may be incomplete.', 'warn'); }
+  };
+  rec.onend = () => {
+    if (S.stopping) { if (S.asrResolve) S.asrResolve(); return; }
+    if (S.recording && S.wantAsr && S.asrErrs < 25) setTimeout(() => { if (S.recording && !S.stopping) startRecognition(); }, 250);
+  };
+  S.rec = rec;
+  try { rec.start(); } catch (e) { console.warn(e); }
+}
+
+/* ---------- Session flow ---------- */
+function pickMime(list) { if (!window.MediaRecorder) return ''; for (const m of list) if (MediaRecorder.isTypeSupported(m)) return m; return ''; }
+const extOf = m => /mp4/.test(m) ? 'mp4' : /ogg/.test(m) ? 'ogg' : 'webm';
+
+async function begin() {
+  if (window.SW_CONFIG && window.SW_CONFIG.requireRegistration && !window.swRegistered) { if (window.swShowGate) window.swShowGate(); return; }
+  $('startBtn').disabled = true; resetState();
+  if (!navigator.mediaDevices || !window.MediaRecorder) { say('This browser cannot record. Use Chrome or Edge.', 'bad'); $('startBtn').disabled = false; return; }
+  say('Requesting camera and microphone access...');
+  const audioC = { echoCancellation: true, noiseSuppression: true, autoGainControl: false };
+  try { S.stream = await navigator.mediaDevices.getUserMedia({ video: { width: { ideal: 1280 }, height: { ideal: 720 }, facingMode: 'user' }, audio: audioC }); S.hasVideo = true; }
+  catch (e1) {
+    try { S.stream = await navigator.mediaDevices.getUserMedia({ audio: audioC }); S.hasVideo = false; say('Camera not available - continuing with audio only (no facial analysis).', 'warn'); }
+    catch (e2) { say('Could not access the microphone: ' + e2.message + '. Allow access in the browser address bar and try again.', 'bad'); $('startBtn').disabled = false; return; }
+  }
+  $('live').classList.remove('hidden'); $('results').classList.add('hidden');
+  const cam = $('cam'); cam.srcObject = S.stream; try { await cam.play(); } catch (e) { /* autoplay */ }
+  startAudio(S.stream);
+  if (S.hasVideo) { say('Loading the face-analysis model (first time can take 10-20 seconds)...'); const ok = await initFace(); if (!ok) say('Face model could not be loaded (internet needed on first use). Continuing without facial analysis.', 'warn'); else say('Ready.', 'ok'); }
+  // countdown + silent noise calibration
+  S.phase = 'calibrating'; A.calib = [];
+  const big = $('count'); big.classList.remove('hidden');
+  for (let n = 3; n >= 1; n--) { big.textContent = n; await sleep(1000); }
+  big.classList.add('hidden');
+  A.thr = clamp(Math.max(0.012, median(A.calib) * 3.5), 0.012, 0.05);
+  startRecording();
+}
+
+function startRecording() {
+  const vm = pickMime(['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm', 'video/mp4']);
+  const am = pickMime(['audio/webm;codecs=opus', 'audio/webm', 'audio/ogg;codecs=opus', 'audio/mp4']);
+  S.vMime = vm; S.aMime = am;
+  S.t0 = performance.now(); S.recording = true; S.phase = 'recording';
+  try {
+    if (S.hasVideo) {
+      S.vRec = new MediaRecorder(S.stream, vm ? { mimeType: vm, videoBitsPerSecond: 1500000, audioBitsPerSecond: 128000 } : {});
+      S.vRec.ondataavailable = e => { if (e.data && e.data.size) S.vChunks.push(e.data); };
+      S.vRec.start(1000);
+    }
+    S.aRec = new MediaRecorder(new MediaStream(S.stream.getAudioTracks()), am ? { mimeType: am, audioBitsPerSecond: 128000 } : {});
+    S.aRec.ondataavailable = e => { if (e.data && e.data.size) S.aChunks.push(e.data); };
+    S.aRec.start(1000);
+  } catch (e) { say('Recording could not start: ' + e.message, 'bad'); S.recording = false; return; }
+  startRecognition();
+  if (Fc.lm) S.timers.push(setInterval(faceTick, 100));
+  S.timers.push(setInterval(uiTick, 250));
+  $('recDot').classList.add('rec'); $('stopBtn').disabled = false; say('Recording... speak naturally.', 'ok');
+}
+
+function uiTick() {
+  if (!S.recording) return;
+  const t = (performance.now() - S.t0) / 1000; $('clock').textContent = fmtTime(t);
+  const tm = TIMING[$('stype').value];
+  const light = $('light'); light.className = 'light' + (tm ? (t >= tm.r ? ' r' : t >= tm.a ? ' a' : t >= tm.g ? ' g' : '') : '');
+  const words = sum(S.segments.map(s => wordsOf(s.text).length));
+  $('mWpm').textContent = t >= 15 && words ? Math.round(words / (t / 60)) : '-';
+  $('mFill').textContent = S.liveFill; $('mPause').textContent = S.pauses.length;
+  $('mPitch').textContent = A.lastPitch ? Math.round(A.lastPitch) : '-';
+  if (Fc.lm) { $('mExpr').textContent = Fc.label; $('mEye').textContent = Fc.det ? Math.round(Fc.eye / Fc.det * 100) + '%' : '-'; }
+  else { $('mExpr').textContent = 'n/a'; $('mEye').textContent = 'n/a'; }
+}
+
+async function finish() {
+  if (!S.recording) return;
+  $('stopBtn').disabled = true; S.recording = false; S.phase = 'processing'; S.stopping = true;
+  S.duration = (performance.now() - S.t0) / 1000; $('recDot').classList.remove('rec');
+  say('Finishing recording and analysing...');
+  S.timers.forEach(clearInterval); S.timers = [];
+  const asrDone = new Promise(r => { S.asrResolve = r; });
+  if (S.rec) { try { S.rec.stop(); } catch (e) { S.asrResolve(); } } else S.asrResolve();
+  await Promise.race([asrDone, sleep(2500)]);
+  if (S.lastInterim) { S.segments.push({ t: S.duration, text: S.lastInterim }); S.lastInterim = ''; }
+  const stops = [S.vRec, S.aRec].filter(Boolean).map(r => new Promise(res => { r.onstop = res; try { r.stop(); } catch (e) { res(); } }));
+  await Promise.all(stops);
+  S.stream.getTracks().forEach(t => t.stop()); try { A.ctx.close(); } catch (e) { /* ignore */ }
+  if (S.vChunks.length) S.vBlob = new Blob(S.vChunks, { type: S.vMime || 'video/webm' });
+  if (S.aChunks.length) S.aBlob = new Blob(S.aChunks, { type: S.aMime || 'audio/webm' });
+  const secs = []; const nSec = Math.ceil(S.duration);
+  for (let i = 0; i < nSec; i++) { const b = Fc.secBins[i]; if (!b) { secs.push('No face'); continue; } secs.push(Object.entries(b).sort((a, b2) => b2[1] - a[1])[0][0]); }
+  const R = computeReport({
+    segments: S.segments, duration: S.duration, pauses: S.pauses, pitches: A.pitches, speakDb: A.speakDb,
+    firstVoice: A.firstVoice, lastVoice: A.lastVoice, speechType: $('stype').value, hadVideo: S.hasVideo,
+    face: Fc.lm ? { frames: Fc.frames, det: Fc.det, eye: Fc.eye, counts: Fc.counts, secs } : null
+  });
+  R.topic = $('topic').value.trim(); R.when = new Date(); R.bins = A.bins; R.segments = S.segments;
+  S.results = R; S.phase = 'done';
+  $('live').classList.add('hidden'); $('results').classList.remove('hidden');
+  renderResults(R);
+  if (typeof window.swOnDone === 'function') window.swOnDone(R);
+  say('Analysis complete. Scroll down for your report.', 'ok');
+  $('results').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ---------- Charts ---------- */
+function setupCanvas(c, h) {
+  const dpr = window.devicePixelRatio || 1, w = c.parentElement.clientWidth || 700;
+  c.style.height = h + 'px'; c.width = Math.round(w * dpr); c.height = Math.round(h * dpr);
+  const g = c.getContext('2d'); g.scale(dpr, dpr); g.clearRect(0, 0, w, h); return { g, w, h };
+}
+function drawLine(c, data, o) {
+  const { g, w, h } = setupCanvas(c, 170), L = 46, Rr = 10, Tp = 12, B = 24;
+  const vals = data.filter(v => v != null); if (!vals.length) { g.fillStyle = '#64748b'; g.font = '13px sans-serif'; g.fillText('Not enough data', 12, 24); return; }
+  const lo = o.min != null ? o.min : Math.floor(Math.min(...vals) - 3), hi = o.max != null ? o.max : Math.ceil(Math.max(...vals) + 3);
+  const X = i => L + (data.length > 1 ? i / (data.length - 1) : 0.5) * (w - L - Rr), Y = v => Tp + (1 - (v - lo) / (hi - lo || 1)) * (h - Tp - B);
+  g.strokeStyle = '#e5e7eb'; g.fillStyle = '#64748b'; g.font = '11px sans-serif'; g.lineWidth = 1;
+  for (let k = 0; k <= 4; k++) { const v = lo + (hi - lo) * k / 4, y = Y(v); g.beginPath(); g.moveTo(L, y); g.lineTo(w - Rr, y); g.stroke(); g.fillText(Math.round(v) + (o.unit || ''), 4, y + 4); }
+  g.fillText('0:00', L, h - 6); g.fillText(fmtTime(data.length), w - Rr - 34, h - 6);
+  g.strokeStyle = o.color; g.lineWidth = 2; g.beginPath(); let pen = false;
+  data.forEach((v, i) => { if (v == null) { pen = false; return; } if (!pen) { g.moveTo(X(i), Y(v)); pen = true; } else g.lineTo(X(i), Y(v)); }); g.stroke();
+}
+function drawWpm(c, bars) {
+  const { g, w, h } = setupCanvas(c, 170), L = 46, Rr = 10, Tp = 12, B = 24, hi = Math.max(200, ...bars.map(b => b.v) , 0) * 1.05;
+  const Y = v => Tp + (1 - v / hi) * (h - Tp - B);
+  g.fillStyle = 'rgba(22,163,74,.12)'; g.fillRect(L, Y(160), w - L - Rr, Y(120) - Y(160));
+  g.strokeStyle = '#e5e7eb'; g.fillStyle = '#64748b'; g.font = '11px sans-serif';
+  for (let k = 0; k <= 4; k++) { const v = hi * k / 4, y = Y(v); g.beginPath(); g.moveTo(L, y); g.lineTo(w - Rr, y); g.stroke(); g.fillText(Math.round(v), 6, y + 4); }
+  const bw = (w - L - Rr) / Math.max(1, bars.length);
+  bars.forEach((b, i) => { g.fillStyle = b.v >= 120 && b.v <= 160 ? '#16a34a' : (b.v > 160 ? '#d97706' : '#2a4fd6'); g.fillRect(L + i * bw + 2, Y(b.v), bw - 4, h - B - Y(b.v)); g.fillStyle = '#64748b'; if (bars.length <= 24 || i % 2 === 0) g.fillText(fmtTime(b.t), L + i * bw + 2, h - 8); });
+}
+function drawTimeline(c, secs) {
+  const { g, w, h } = setupCanvas(c, 46), n = Math.max(1, secs.length), bw = w / n;
+  secs.forEach((lab, i) => { g.fillStyle = LABEL_COLORS[lab] || '#94a3b8'; g.fillRect(i * bw, 0, Math.ceil(bw) + 0.5, h); });
+}
+
+/* ---------- Report rendering ---------- */
+function barHtml(c) { const b = band(c.score); return '<div class="bar"><div class="bl"><b>' + esc(c.label) + '</b><span>' + c.score + '/100 - ' + b[0] + '</span></div><div class="bt"><i class="' + b[1] + '" style="width:' + c.score + '%"></i></div><p>' + esc(c.detail) + '</p></div>'; }
+function annotate(sg) {
+  let out = '', pos = 0; const cls = { filler: 'f', grammar: 'g', style: 's', repeat: 'r' };
+  for (const is of sg.issues) { out += esc(sg.text.slice(pos, is.s)) + '<mark class="' + cls[is.kind] + '" title="' + esc(is.msg) + '">' + esc(sg.text.slice(is.s, is.e)) + '</mark>'; pos = is.e; }
+  return out + esc(sg.text.slice(pos));
+}
+function renderResults(R) {
+  const T = R.T, o = R.overall, ob = o != null ? band(o) : ['n/a', 'ok'];
+  const ringC = { good: 'var(--ok)', ok: '#65a30d', warn: 'var(--warn)', bad: 'var(--bad)' }[ob[1]];
+  const stype = TIMING[$('stype').value];
+  let h = '';
+  h += '<div class="card"><h2>Speech evaluation report</h2><p class="muted">' + esc(R.when.toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' })) + (R.topic ? ' | Topic: ' + esc(R.topic) : '') + ' | Duration ' + fmtTime(R.dur) + '</p>';
+  h += '<div class="ringbox"><div class="ring" style="--p:' + (o || 0) + ';--c:' + ringC + '"><span>' + (o != null ? o : '-') + '</span></div><div><div style="font-size:20px;font-weight:700">' + esc(ob[0]) + '</div><div class="muted">Overall score out of 100, weighted across the categories below.</div>';
+  if (R.timing) h += '<div style="margin-top:6px"><b>Timing (' + esc(R.timing.name) + '):</b> ' + (R.timing.ok ? '&#10003; ' : '&#9888; ') + esc(R.timing.text) + ' (green ' + fmtTime(R.timing.g) + ', amber ' + fmtTime(R.timing.a) + ', red ' + fmtTime(R.timing.r) + ').</div>';
+  h += '</div></div>';
+  h += '<div class="stats">' +
+    '<div class="stat"><span>Words spoken</span><b>' + T.words + '</b></div>' +
+    '<div class="stat"><span>Pace (speaking)</span><b>' + (R.hasText ? Math.round(R.wpmSpeaking) + ' wpm' : '-') + '</b></div>' +
+    '<div class="stat"><span>Filler / crutch words</span><b>' + T.fillers.total + '</b></div>' +
+    '<div class="stat"><span>Grammar issues</span><b>' + T.grammar.length + '</b></div>' +
+    '<div class="stat"><span>Effective pauses</span><b>' + R.eff.length + '</b></div>' +
+    '<div class="stat"><span>Eye contact</span><b>' + (R.face && R.face.det > 20 ? R.face.eyePct.toFixed(0) + '%' : '-') + '</b></div></div></div>';
+
+  h += '<div class="card"><h2>Scores by category</h2>' + (R.cats.length ? R.cats.map(barHtml).join('') : '<p>No categories could be scored.</p>') + '</div>';
+
+  h += '<div class="card"><h2>Toastmasters-style evaluation</h2><div class="two"><div><h3>Commendations</h3>' +
+    (R.strengths.length ? '<ul class="tight">' + R.strengths.map(c => '<li><b>' + esc(c.label) + ':</b> ' + esc(c.strength) + '</li>').join('') + '</ul>' : '<p class="muted">No category reached the commendation threshold (75) in this session - consistent practice will change that.</p>') +
+    '</div><div><h3>Recommendations</h3>' + (R.improve.length ? '<ul class="tight">' + R.improve.map(c => '<li><b>' + esc(c.label) + ':</b> ' + esc(c.advice) + '</li>').join('') + '</ul>' : '<p class="muted">Excellent across the board.</p>') + '</div></div>' +
+    (R.challenge ? '<h3>Challenge for your next speech</h3><p>Focus on <b>' + esc(R.challenge.label) + '</b>. Record again within 48 hours and aim to lift this score by 10 points.</p>' : '') + '</div>';
+
+  if (R.hasText) {
+    h += '<div class="card"><h2>Language analysis</h2><div class="two"><div><h3>Filler and crutch words</h3>';
+    const fl = Object.entries(T.fillers.list).sort((a, b) => b[1] - a[1]);
+    h += fl.length ? '<table><tr><th>Word / phrase</th><th>Count</th></tr>' + fl.map(([k, v]) => '<tr><td>' + esc(k) + '</td><td>' + v + '</td></tr>').join('') + '</table>' : '<p class="muted">None detected.</p>';
+    h += '<p class="muted">By type: ' + Object.entries(FILLER_CATS).map(([k, n]) => esc(n) + ' ' + T.fillers.byCat[k]).join(' | ') + '. Repeated-word stumbles: ' + T.repeats + '.</p></div>';
+    h += '<div><h3>Grammar and style flags</h3>';
+    const gl = [...T.grammar.map(x => ({ ...x, k: 'Grammar' })), ...T.style.map(x => ({ ...x, k: 'Style' }))].sort((a, b) => a.t - b.t).slice(0, 25);
+    h += gl.length ? '<table><tr><th>Said</th><th>Type</th><th>Suggestion</th></tr>' + gl.map(x => '<tr><td>"' + esc(x.text) + '"<br><span class="muted">' + fmtTime(x.t) + '</span></td><td>' + x.k + '</td><td>' + esc(x.msg) + '</td></tr>').join('') + '</table>' : '<p class="muted">No rule-based issues found.</p>';
+    h += '</div></div>';
+    h += '<h3>Sentence structure (replaces "punctuation errors")</h3><p class="muted">Speech recognition does not produce reliable punctuation, so punctuation cannot be audited from speech. Instead, these structure indicators show how your thoughts were chunked.</p>' +
+      '<ul class="tight"><li>Average phrase length ' + T.avgSeg.toFixed(1) + ' words; longest unbroken phrase ' + T.longestSeg + ' words' + (T.longestSeg > 35 ? ' (very long - consider splitting into shorter sentences)' : '') + '.</li>' +
+      '<li>Connectors per 100 words - and: ' + (T.conn.and / T.words * 100).toFixed(1) + ', so: ' + (T.conn.so / T.words * 100).toFixed(1) + ', then: ' + (T.conn.then / T.words * 100).toFixed(1) + ', but: ' + (T.conn.but / T.words * 100).toFixed(1) + '; "and then" chains: ' + T.andThen + (T.andThen >= 4 ? ' (try "next", "after that" or a full stop)' : '') + '.</li>' +
+      '<li>Phrases that began with and / so / then / but: ' + T.segStartConn + ' of ' + T.segCount + '.</li></ul>';
+    h += '<h3>Vocabulary</h3><ul class="tight"><li>Vague words used: ' + (T.weakCount ? Object.entries(T.weak).map(([k, v]) => esc(k) + ' (' + v + ')').join(', ') : 'none') + '.</li><li>Most repeated content words: ' + (T.top.length ? T.top.map(([k, v]) => esc(k) + ' (' + v + ')').join(', ') : 'none repeated 3+ times') + '.</li></ul></div>';
+  }
+
+  h += '<div class="card"><h2>Vocal delivery</h2>';
+  if (R.hasText) { h += '<h3>Pace by 15-second window (green band = 120-160 wpm)</h3><canvas id="cWpm" aria-label="Words per minute over time"></canvas>'; }
+  h += '<h3>Pitch over time (Hz, per second)</h3><canvas id="cPitch" aria-label="Pitch over time"></canvas>';
+  h += '<h3>Volume over time (dBFS while speaking; higher = louder, depends on microphone gain)</h3><canvas id="cVol" aria-label="Volume over time"></canvas>';
+  h += '<h3>Pauses</h3><p>' + R.eff.length + ' effective pauses and ' + R.lng.length + ' long hesitations. ' + (R.lng.length ? 'Long hesitations at: ' + R.lng.slice(0, 8).map(p => fmtTime(p.start) + ' (' + p.dur.toFixed(1) + ' s)').join(', ') + '.' : '') + '</p></div>';
+
+  h += '<div class="card"><h2>Body language (camera)</h2>';
+  if (R.face && R.face.det > 20) {
+    h += '<p>Eye contact toward camera: <b>' + R.face.eyePct.toFixed(0) + '%</b>. Face visible: <b>' + (100 - R.face.noFace).toFixed(0) + '%</b> of the time.</p><h3>Expression timeline</h3><canvas id="cExpr" aria-label="Expression timeline"></canvas><div class="legend">' +
+      Object.entries(LABEL_COLORS).map(([k, c]) => '<span><i style="background:' + c + '"></i>' + esc(k) + (R.face.shares[k] ? ' ' + R.face.shares[k].toFixed(0) + '%' : '') + '</span>').join('') + '</div>';
+  } else h += '<p class="muted">Facial analysis was not available for this session.</p>';
+  h += '</div>';
+
+  h += '<div class="card"><h2>Annotated transcript</h2><div class="legend"><span><mark class="f">filler</mark></span><span><mark class="g">grammar</mark></span><span><mark class="s">style</mark></span><span><mark class="r">repeat</mark></span></div>' +
+    (T.segments.length ? T.segments.map(sg => '<div class="seg"><time>' + fmtTime(sg.t) + '</time>' + annotate(sg) + '</div>').join('') : '<p class="muted">No transcript was captured.</p>') + '</div>';
+
+  h += '<div class="card"><h2>Notes and limitations</h2><ul class="tight">' + R.notes.map(n => '<li>' + esc(n) + '</li>').join('') +
+    '<li>The browser recogniser usually removes "um / uh", so hesitation sounds are under-counted; spoken crutch words (like, you know, basically...) are detected more reliably.</li>' +
+    '<li>"Like" and "kind of" are judged by simple context rules, and sentence openers (so, well, okay) are counted at the start of each recognised phrase - treat counts as indicators.</li>' +
+    '<li>Grammar checking is rule-based (about 35 common patterns) and misses many errors; review the transcript yourself or use a human evaluator for high-stakes use.</li>' +
+    '<li>Eye contact and expression are estimated from camera blendshapes and head pose; glancing down at notes lowers the score. Pitch and volume depend on microphone quality and placement.</li>' +
+    '<li>Scores follow the dimensions of Toastmasters speech evaluation (language, vocal variety, eye contact, gestures/expression, use of pauses, timing) but are not an official Toastmasters International assessment.</li></ul></div>';
+  $('report').innerHTML = h;
+
+  // players
+  const pl = $('players'); pl.innerHTML = '';
+  if (S.vBlob) { const v = document.createElement('video'); v.controls = true; v.src = URL.createObjectURL(S.vBlob); pl.appendChild(v); }
+  if (S.aBlob) { const a = document.createElement('audio'); a.controls = true; a.src = URL.createObjectURL(S.aBlob); pl.appendChild(a); }
+
+  // charts (after layout)
+  const n = Math.ceil(R.dur);
+  if (R.hasText) {
+    const bars = [], W = 15, nb = Math.ceil(R.dur / W), words = new Array(nb).fill(0); let prev = 0;
+    for (const s of R.T.segments) { const wc = wordsOf(s.text).length, a = prev, b = Math.max(s.t, a + 0.5); for (let i = 0; i < nb; i++) { const lo = Math.max(a, i * W), hi = Math.min(b, (i + 1) * W); if (hi > lo) words[i] += wc * (hi - lo) / (b - a); } prev = s.t; }
+    for (let i = 0; i < nb; i++) { const wdt = Math.min(W, R.dur - i * W); bars.push({ t: i * W, v: wdt > 1 ? words[i] / (wdt / 60) : 0 }); }
+    drawWpm($('cWpm'), bars);
+  }
+  const pitchSeries = [], volSeries = [];
+  for (let i = 0; i < n; i++) { const b = R.bins[i]; pitchSeries.push(b && b.p.length >= 3 ? median(b.p) : null); volSeries.push(b && b.db.length >= 3 ? mean(b.db) : null); }
+  drawLine($('cPitch'), pitchSeries, { color: '#2a4fd6', unit: '' });
+  drawLine($('cVol'), volSeries, { color: '#5b8def', unit: '' });
+  if ($('cExpr')) drawTimeline($('cExpr'), R.face.secs);
+}
+
+/* ---------- Saving ---------- */
+function stamp() { const d = S.results ? S.results.when : new Date(), p = n => String(n).padStart(2, '0'); return 'SpeakWell_' + d.getFullYear() + p(d.getMonth() + 1) + p(d.getDate()) + '_' + p(d.getHours()) + p(d.getMinutes()) + p(d.getSeconds()); }
+function buildReportHtml() {
+  const rep = $('report'), clone = rep.cloneNode(true), o = rep.querySelectorAll('canvas'), c = clone.querySelectorAll('canvas');
+  o.forEach((cv, i) => { const img = document.createElement('img'); img.src = cv.toDataURL('image/png'); img.alt = cv.getAttribute('aria-label') || ''; img.style.width = '100%'; c[i].replaceWith(img); });
+  const sprite = $('evSprite').outerHTML, when = (S.results ? S.results.when : new Date()).toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' });
+  const head = '<div class="rpt-head show"><svg class="ev-logo" viewBox="0 0 120 120" aria-hidden="true"><use href="#ev-mark"/></svg><div><b>SpeakWell &middot; Speech Evaluation Report</b><span>by Excel Vibez &middot; CA Alok Sethi</span></div><div class="rd">' + esc(when) + '</div></div>';
+  const foot = '<div class="rpt-foot show"><b>Excel Vibez &middot; CA Alok Sethi</b> &mdash; ExcelVibez: Cosmos of Enormous Learnings. This report is automated, indicative feedback for practice only; it is not a Toastmasters International evaluation. Created with SpeakWell (speakwellwithalok.vercel.app).</div>';
+  return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>SpeakWell report - Excel Vibez</title><style>' + $('appStyle').textContent + '</style></head><body>' + sprite + '<main class="wrap" style="padding-top:16px">' + head + clone.outerHTML + foot + '</main></body></html>';
+}
+function transcriptText() { const R = S.results; return 'SpeakWell transcript\n' + R.when.toISOString() + (R.topic ? '\nTopic: ' + R.topic : '') + '\n\n' + R.segments.map(s => '[' + fmtTime(s.t) + '] ' + s.text).join('\n') + '\n'; }
+function getFiles() {
+  const b = stamp(), f = [];
+  if (S.vBlob) f.push({ name: b + '_video.' + extOf(S.vMime), blob: S.vBlob });
+  if (S.aBlob) f.push({ name: b + '_audio.' + extOf(S.aMime), blob: S.aBlob });
+  f.push({ name: b + '_report.html', blob: new Blob([buildReportHtml()], { type: 'text/html' }) });
+  f.push({ name: b + '_transcript.txt', blob: new Blob([transcriptText()], { type: 'text/plain' }) });
+  return f;
+}
+function dl(blob, name) { const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 4000); }
+async function saveOne(blob, name, desc) {
+  if (window.showSaveFilePicker) {
+    try {
+      const ext = name.split('.').pop(), mt = (blob.type || 'application/octet-stream').split(';')[0];
+      const h = await window.showSaveFilePicker({ suggestedName: name, types: [{ description: desc, accept: { [mt]: ['.' + ext] } }] });
+      const w = await h.createWritable(); await w.write(blob); await w.close(); say('Saved ' + name, '', 'msg2'); return;
+    } catch (e) { if (e.name === 'AbortError') { say('Save cancelled.', '', 'msg2'); return; } console.warn(e); }
+  }
+  dl(blob, name); say('Downloaded ' + name + ' to your browser download location.', '', 'msg2');
+}
+async function saveAll() {
+  const files = getFiles();
+  if (window.showDirectoryPicker) {
+    try {
+      if (!S.dir) S.dir = await window.showDirectoryPicker({ mode: 'readwrite' });
+      if (S.dir.queryPermission && (await S.dir.queryPermission({ mode: 'readwrite' })) !== 'granted') { if ((await S.dir.requestPermission({ mode: 'readwrite' })) !== 'granted') throw new Error('permission to write was not granted'); }
+      for (const f of files) { const fh = await S.dir.getFileHandle(f.name, { create: true }); const w = await fh.createWritable(); await w.write(f.blob); await w.close(); }
+      say('Saved ' + files.length + ' files to folder "' + S.dir.name + '".', '', 'msg2'); return;
+    } catch (e) {
+      if (e.name === 'AbortError') { say('Save cancelled.', '', 'msg2'); return; }
+      console.warn(e); S.dir = null; say('Could not write to the folder (' + e.message + '). Falling back to normal downloads...', '', 'msg2');
+    }
+  }
+  for (const f of files) { dl(f.blob, f.name); await sleep(500); }
+  say('Files downloaded to your browser download location.', '', 'msg2');
+}
+
+/* ---------- Wiring ---------- */
+$('startBtn').onclick = begin;
+$('stopBtn').onclick = finish;
+$('saveAll').onclick = saveAll;
+$('saveV').onclick = () => S.vBlob ? saveOne(S.vBlob, stamp() + '_video.' + extOf(S.vMime), 'Video') : say('No video was recorded.', '', 'msg2');
+$('saveA').onclick = () => S.aBlob ? saveOne(S.aBlob, stamp() + '_audio.' + extOf(S.aMime), 'Audio') : say('No audio was recorded.', '', 'msg2');
+$('saveR').onclick = () => saveOne(new Blob([buildReportHtml()], { type: 'text/html' }), stamp() + '_report.html', 'HTML report');
+$('printR').onclick = () => { const d = $('rptDate'); if (d && S.results) d.textContent = S.results.when.toLocaleString('en-IN', { dateStyle: 'medium', timeStyle: 'short' }); window.print(); };
+$('newS').onclick = () => { if (confirm('Start a new session? Unsaved recordings and the report will be lost.')) location.reload(); };
+window.addEventListener('beforeunload', e => { if (S.recording) { e.preventDefault(); e.returnValue = ''; } });
+</script>
+<script id="gate-script">
+(function () {
+  'use strict';
+  // Forks: set requireRegistration to false to run SpeakWell without registration or any server calls.
+  var CFG = window.SW_CONFIG = { requireRegistration: true, apiBase: '', consentVersion: 'v1' };
+  var KEY = 'sw_reg_v1';
+  function el(id) { return document.getElementById(id); }
+  function load() { try { return JSON.parse(localStorage.getItem(KEY) || 'null'); } catch (e) { return null; } }
+  function save(o) { try { localStorage.setItem(KEY, JSON.stringify(o)); } catch (e) { /* private mode */ } }
+  var reg = load();
+  window.swRegistered = !CFG.requireRegistration || !!(reg && reg.id);
+  window.swShowGate = function () { el('gate').classList.remove('hidden'); setTimeout(function () { el('gName').focus(); }, 50); };
+  if (!window.swRegistered) window.swShowGate();
+
+  function normPhone(raw) {
+    var s = String(raw || '').replace(/[\s().-]/g, '');
+    if (/^00\d{8,15}$/.test(s)) s = '+' + s.slice(2);
+    if (/^0?[6-9]\d{9}$/.test(s)) return '+91' + s.slice(-10);
+    if (/^91[6-9]\d{9}$/.test(s)) return '+' + s;
+    if (/^\+91/.test(s)) return /^\+91[6-9]\d{9}$/.test(s) ? s : null;
+    if (/^\+[1-9]\d{7,14}$/.test(s)) return s;
+    return null;
+  }
+  function setErr(m) { el('gErr').textContent = m || ''; }
+
+  el('gForm').addEventListener('submit', async function (ev) {
+    ev.preventDefault(); setErr('');
+    var name = el('gName').value.trim(), email = el('gEmail').value.trim(), city = el('gCity').value.trim(), phone = normPhone(el('gPhone').value);
+    if (name.length < 2) return setErr('Please enter your full name.');
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return setErr('Please enter a valid email address.');
+    if (city.length < 2) return setErr('Please enter your city.');
+    if (!phone) return setErr('Please enter a valid WhatsApp number.');
+    if (!el('gAge').checked || !el('gConsent').checked) return setErr('Please tick the 18+ confirmation and the consent box to continue.');
+    var btn = el('gBtn'); btn.disabled = true; btn.textContent = 'Saving...';
+    try {
+      var r = await fetch(CFG.apiBase + '/api/register', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name: name, email: email, city: city, whatsapp: phone, age18: true, consent: true, marketing: el('gMkt').checked, consentVersion: CFG.consentVersion, website: el('gHp').value })
+      });
+      var j = await r.json().catch(function () { return {}; });
+      if (r.ok && j.ok) { save({ id: j.id, at: Date.now() }); window.swRegistered = true; el('gate').classList.add('hidden'); }
+      else setErr(j.error || 'Could not register. Please try again.');
+    } catch (e) { setErr('Network problem - please check your connection and try again.'); }
+    btn.disabled = false; btn.textContent = 'Register and continue';
+  });
+
+  // Called by the app when a session finishes: sends only id, duration, overall score, video flag.
+  window.swOnDone = function (R) {
+    var r = load(); if (!CFG.requireRegistration || !r || !r.id) return;
+    try {
+      fetch(CFG.apiBase + '/api/event', { method: 'POST', headers: { 'Content-Type': 'application/json' }, keepalive: true,
+        body: JSON.stringify({ id: r.id, duration: Math.round(R.dur), score: R.overall, hasVideo: !!S.hasVideo }) }).catch(function () { });
+    } catch (e) { /* ignore */ }
+  };
+})();
+</script>
+</body>
+</html>

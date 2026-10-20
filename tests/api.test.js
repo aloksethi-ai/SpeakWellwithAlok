@@ -60,7 +60,8 @@ function mockRes() {
 
   // fake Apps Script endpoint
   const received = [];
-  const srv = http.createServer((req, res) => { let b = ''; req.on('data', d => b += d); req.on('end', () => { const j = JSON.parse(b); received.push(j); res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(j.secret === 'sekret' ? { ok: true, id: '123e4567-e89b-42d3-a456-426614174000' } : { ok: false, error: 'unauthorized' })); }); });
+  let failNext = 0;
+  const srv = http.createServer((req, res) => { let b = ''; req.on('data', d => b += d); req.on('end', () => { if (failNext > 0) { failNext--; res.statusCode = 500; return res.end('<html>temporary error</html>'); } const j = JSON.parse(b); received.push(j); res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(j.secret === 'sekret' ? { ok: true, id: '123e4567-e89b-42d3-a456-426614174000' } : { ok: false, error: 'unauthorized' })); }); });
   await new Promise(r => srv.listen(0, r));
   process.env.SHEET_WEBHOOK_URL = 'http://127.0.0.1:' + srv.address().port + '/exec';
   process.env.SHEET_SECRET = 'sekret';
@@ -90,6 +91,14 @@ function mockRes() {
     const saved = process.env.SHEET_SECRET; process.env.SHEET_SECRET = 'wrong';
     const r = mockRes(); await register(req(good), r); process.env.SHEET_SECRET = saved;
     assert.strictEqual(r.code, 502); assert.ok(!/unauthorized|secret/i.test(JSON.stringify(r.body)));
+  });
+  await t('register: one transient backend failure is retried and succeeds', async () => {
+    failNext = 1; const r = mockRes(); await register(req(good), r);
+    assert.strictEqual(r.code, 200); assert.ok(r.body.ok && r.body.id);
+  });
+  await t('register: two consecutive failures still return a clean 502', async () => {
+    failNext = 2; const r = mockRes(); await register(req(good), r);
+    assert.strictEqual(r.code, 502); assert.ok(!/temporary|html/i.test(JSON.stringify(r.body)));
   });
   await t('event: valid event forwarded, invalid rejected', async () => {
     let r = mockRes(); await event(req({ id: '123e4567-e89b-42d3-a456-426614174000', duration: 90, score: 64, hasVideo: true }), r);

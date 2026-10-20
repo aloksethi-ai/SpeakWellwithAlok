@@ -103,7 +103,7 @@ async function forwardOnce(payload, timeoutMs) {
 // opts.retries: extra attempts after a failure (use only for idempotent calls such as registration,
 // which the Sheet de-duplicates by email). opts.timeoutMs: per-attempt timeout.
 async function forward(payload, opts) {
-  const retries = (opts && opts.retries) || 0, timeoutMs = (opts && opts.timeoutMs) || 12000;
+  const retries = (opts && opts.retries) || 0, timeoutMs = (opts && opts.timeoutMs) || 20000;
   let last;
   for (let i = 0; i <= retries; i++) {
     try {

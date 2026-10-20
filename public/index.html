@@ -1086,7 +1086,7 @@ window.addEventListener('beforeunload', e => { if (S.recording) { e.preventDefau
     if (city.length < 2) return setErr('Please enter your city.');
     if (!phone) return setErr('Please enter a valid WhatsApp number.');
     if (!el('gAge').checked || !el('gConsent').checked) return setErr('Please tick the 18+ confirmation and the consent box to continue.');
-    var btn = el('gBtn'); btn.disabled = true; btn.textContent = 'Saving...';
+    var btn = el('gBtn'); btn.disabled = true; btn.textContent = 'Saving... (can take up to 30 seconds)';
     try {
       var r = await fetch(CFG.apiBase + '/api/register', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },

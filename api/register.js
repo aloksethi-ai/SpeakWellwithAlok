@@ -16,7 +16,7 @@ module.exports = async (req, res) => {
   if (!v.ok) return res.status(400).json({ ok: false, error: v.error });
 
   try {
-    const r = await forward({ type: 'register', ...v.data }, { retries: 1, timeoutMs: 12000 }); // safe to retry: the Sheet de-duplicates by email
+    const r = await forward({ type: 'register', ...v.data }, { retries: 1, timeoutMs: 26000 }); // safe to retry: the Sheet de-duplicates by email
     if (!r || !r.ok || !r.id) throw new Error((r && r.error) || 'bad_response');
     return res.status(200).json({ ok: true, id: r.id });
   } catch (e) {
